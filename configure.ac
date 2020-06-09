@@ -462,6 +462,8 @@ linux*)
 gnu*)
   host_os=`echo $host_os | sed -e 's/gnu/gnu-gnu/'`
   ;;
+ukl*)
+  ;;
 esac
 
 AC_ARG_ENABLE([mathvec],
@@ -798,6 +800,8 @@ gnu*)
   base_os=mach/hurd ;;
 linux*)
   base_os=unix/sysv ;;
+ukl*)
+  base_os=unix/sysv/linux ;;
 esac
 
 # For sunos4.1.1, try sunos4.1.1, then sunos4.1, then sunos4, then sunos.
