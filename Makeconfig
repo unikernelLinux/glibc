@@ -951,8 +951,12 @@ in-module = $(subst -,_,$(firstword $(libof-$(basename $(@F))) \
 tls-model = $(if $(filter libpthread rtld \
 			  libc,$(in-module)),-ftls-model=initial-exec,)
 
+ifeq (yes,$(build-shared))
 module-cppflags-real = -include $(common-objpfx)libc-modules.h \
 		       -DMODULE_NAME=$(in-module)
+else
+module-cppflags-real = -DMODULE_NAME=$(in-module) -DMODULE_libc=0 -DMODULE_testsuite=2 -DMODULE_rtld=1 -DMODULE_libpthread=0 -DMODULE_nonlib=3 -DMODULE_ldconfig=4 -DMODULE_libutil=0 -DMODULE_libnsl=0 -DMODULE_libnss_files=0 -DMODULE_libnss_nisplus=0 -DMODULE_libdl=0 -DMODULE_librt=0 -DMODULE_libresolv=0 -DMODULE_libmvec=0 -DMODULE_libm=0 -DMODULE_LIBS_BEGIN=0 -DMODULE_nscd=5 -DMODULE_libnss_dns=0 -DMODULE_iconvprogs=6
+endif
 
 # We don't need libc-modules.h and the MODULE_NAME definition for .v.i
 # files.  These targets don't (and will likely never need to) use the IS_IN
@@ -1138,6 +1142,7 @@ endif
 postclean-generated += soversions.mk soversions.i \
 		       shlib-versions.v shlib-versions.v.i
 
+ifeq (yes,$(build-shared))
 before-compile += $(common-objpfx)libc-modules.h
 common-generated += libc-modules.h libc-modules.stmp
 ifeq ($(soversions.mk-done),t)
@@ -1152,6 +1157,7 @@ $(common-objpfx)libc-modules.stmp: $(..)scripts/gen-libc-modules.awk \
 	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
 
+endif
 endif
 
 # Build the tunables list header early since it could be used by any module in
