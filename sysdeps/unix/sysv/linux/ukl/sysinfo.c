@@ -1,5 +1,4 @@
-/* Finite math compatibility macros.
-   Copyright (C) 2020 Free Software Foundation, Inc.
+/* Copyright (C) 2019 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,24 +15,15 @@
    License along with the GNU C Library; if not, see
    <http://www.gnu.org/licenses/>.  */
 
-#ifndef _LIBM_ALIAS_FINITE_H
-#define _LIBM_ALIAS_FINITE_H
+#include <sys/sysinfo.h>
 
-//#include <first-versions.h>
-#include <shlib-compat.h>
+// TODO: header file
+extern int ukl_sysinfo (struct sysinfo *);
 
-/* The -ffinite-math symbols were added on GLIBC 2.15 and moved to compat
-   symbol so newer architectures do not require to support it.  */
-#if SHLIB_COMPAT (libm, GLIBC_2_15, GLIBC_2_31)
-# define libm_alias_finite(from, to)				\
-  libm_alias_finite1(from, to)
-# define libm_alias_finite1(from, to)				\
-compat_symbol (libm,						\
-	       from,						\
-	       to ## _finite, 					\
-	       FIRST_VERSION_libm_ ## to ## _finite);
-#else
-# define libm_alias_finite(from, to)
-#endif
+int
+__sysinfo(struct sysinfo *info)
+{
+  return ukl_sysinfo (info);
+}
+weak_alias (__sysinfo, sysinfo)
 
-#endif
