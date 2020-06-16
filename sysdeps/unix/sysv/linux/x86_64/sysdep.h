@@ -26,12 +26,14 @@
 /* Defines RTLD_PRIVATE_ERRNO.  */
 #include <dl-sysdep.h>
 
+//#include <../ukl/ukl.h>
+
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
-#define SYS_ify(syscall_name)	__NR_##syscall_name
+#define SYS_ify(syscall_name)	__ukl_##syscall_name
 
 /* This is to help the old kernel headers where __NR_semtimedop is not
    available.  */
@@ -219,7 +221,9 @@
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\
-	internal_syscall##nr (SYS_ify (name), err, args)
+	internal_syscall##nr (*(SYS_ify (name)), err, args)
+	
+//extern void (*(SYS_ify (name)));
 
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
@@ -229,10 +233,12 @@
 #define internal_syscall0(number, err, dummy...)			\
 ({									\
     unsigned long int resultvar;					\
+    TYPEFY (number, __number) = ARGIFY (number);			\
+    register TYPEFY (number, _n1) asm ("rax") = __number;		\
     asm volatile (							\
-    "syscall\n\t"							\
+    "call entry_SYSCALL_64\n\t"							\
     : "=a" (resultvar)							\
-    : "0" (number)							\
+    : "r" (_n1)								\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
     (long int) resultvar;						\
 })
@@ -241,12 +247,14 @@
 #define internal_syscall1(number, err, arg1)				\
 ({									\
     unsigned long int resultvar;					\
+    TYPEFY (number, __number) = ARGIFY (number);			\
+    register TYPEFY (number, _n1) asm ("rax") = __number;		\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "syscall\n\t"							\
+    "call entry_SYSCALL_64\n\t"							\
     : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1)						\
+    : "r" (_n1), "r" (_a1)						\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
     (long int) resultvar;						\
 })
@@ -255,14 +263,16 @@
 #define internal_syscall2(number, err, arg1, arg2)			\
 ({									\
     unsigned long int resultvar;					\
+    TYPEFY (number, __number) = ARGIFY (number);			\
+    register TYPEFY (number, _n1) asm ("rax") = __number;		\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "syscall\n\t"							\
+    "call entry_SYSCALL_64\n\t"							\
     : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2)				\
+    : "r" (_n1), "r" (_a1), "r" (_a2)				\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
     (long int) resultvar;						\
 })
@@ -271,6 +281,8 @@
 #define internal_syscall3(number, err, arg1, arg2, arg3)		\
 ({									\
     unsigned long int resultvar;					\
+    TYPEFY (number, __number) = ARGIFY (number);			\
+    register TYPEFY (number, _n1) asm ("rax") = __number;		\
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
@@ -278,9 +290,9 @@
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "syscall\n\t"							\
+    "call entry_SYSCALL_64\n\t"							\
     : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
+    : "r" (_n1), "r" (_a1), "r" (_a2), "r" (_a3)			\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
     (long int) resultvar;						\
 })
@@ -289,6 +301,8 @@
 #define internal_syscall4(number, err, arg1, arg2, arg3, arg4)		\
 ({									\
     unsigned long int resultvar;					\
+    TYPEFY (number, __number) = ARGIFY (number);			\
+    register TYPEFY (number, _n1) asm ("rax") = __number;		\
     TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
@@ -298,9 +312,9 @@
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "syscall\n\t"							\
+    "call entry_SYSCALL_64\n\t"							\
     : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
+    : "r" (_n1), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
     (long int) resultvar;						\
 })
@@ -309,6 +323,8 @@
 #define internal_syscall5(number, err, arg1, arg2, arg3, arg4, arg5)	\
 ({									\
     unsigned long int resultvar;					\
+    TYPEFY (number, __number) = ARGIFY (number);			\
+    register TYPEFY (number, _n1) asm ("rax") = __number;		\
     TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
     TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
@@ -320,9 +336,9 @@
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "syscall\n\t"							\
+    "call entry_SYSCALL_64\n\t"							\
     : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
+    : "r" (_n1), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
       "r" (_a5)								\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
     (long int) resultvar;						\
@@ -332,6 +348,8 @@
 #define internal_syscall6(number, err, arg1, arg2, arg3, arg4, arg5, arg6) \
 ({									\
     unsigned long int resultvar;					\
+    TYPEFY (number, __number) = ARGIFY (number);			\
+    register TYPEFY (number, _n1) asm ("rax") = __number;		\
     TYPEFY (arg6, __arg6) = ARGIFY (arg6);			 	\
     TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
     TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
@@ -345,9 +363,9 @@
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "syscall\n\t"							\
+    "call entry_SYSCALL_64\n\t"							\
     : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
+    : "r" (_n1), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
       "r" (_a5), "r" (_a6)						\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
     (long int) resultvar;						\

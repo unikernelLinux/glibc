@@ -16,13 +16,12 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <time.h>
-
+#include <sysdep.h>
 // TODO: header file
-extern int ukl_clock_gettime (clockid_t, struct timespec *);
 
 int
 __syscall_clock_gettime (clockid_t clk_id, struct timespec *tp)
 {
-  return ukl_clock_gettime (clk_id, tp);
+  return INLINE_SYSCALL(clock_gettime, 2, clk_id, tp);
 }
 

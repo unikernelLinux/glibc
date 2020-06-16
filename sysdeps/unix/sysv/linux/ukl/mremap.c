@@ -19,7 +19,6 @@
 #include <stdarg.h>
 
 // TODO: header file
-extern void *ukl_mremap (void *, size_t, size_t, int, ...);
 
 void *
 __mremap (void *old_address, size_t old_size, size_t new_size, int flags, ... /* void *new_address */)
@@ -30,10 +29,10 @@ __mremap (void *old_address, size_t old_size, size_t new_size, int flags, ... /*
       va_start (ap, flags);
       void *new_address = va_arg (ap, void *);
       va_end (ap);
-      return ukl_mremap (old_address, old_size, new_size, flags, new_address);
+      return INLINE_SYSCALL(mremap, 5, old_address, old_size, new_size, flags, new_address);
     }
   else
-    return ukl_mremap (old_address, old_size, new_size, flags);
+    return INLINE_SYSCALL(mremap, 4, old_address, old_size, new_size, flags);
 }
 libc_hidden_def (__mremap)
 weak_alias (__mremap, mremap)

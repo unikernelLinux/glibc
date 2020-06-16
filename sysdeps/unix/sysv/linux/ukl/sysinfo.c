@@ -16,14 +16,13 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/sysinfo.h>
+#include <sysdep.h>
 
 // TODO: header file
-extern int ukl_sysinfo (struct sysinfo *);
-
 int
 __sysinfo(struct sysinfo *info)
 {
-  return ukl_sysinfo (info);
+  return INLINE_SYSCALL(sysinfo, 1, info);
 }
 weak_alias (__sysinfo, sysinfo)
 

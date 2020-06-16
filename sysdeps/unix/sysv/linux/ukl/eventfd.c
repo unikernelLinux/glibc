@@ -16,12 +16,11 @@
    <http://www.gnu.org/licenses/>.  */
 
 #include <sys/eventfd.h>
+#include <sysdep.h>
 
 // TODO: header file
-extern int ukl_eventfd (unsigned int, int);
-
 int
 eventfd (unsigned int initval, int flags)
 {
-  return ukl_eventfd (initval, flags);
+  return INLINE_SYSCALL(eventfd, 2, initval, flags);
 }

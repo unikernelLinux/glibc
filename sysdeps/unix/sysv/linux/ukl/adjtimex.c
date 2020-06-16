@@ -19,12 +19,10 @@
 #include <sys/timex.h>
 #include <sysdep.h>
 
-extern int ukl_clock_adjtimex (struct timex *);
-
 int
 ___adjtimex (struct timex *buf)
 {
-  return ukl_clock_adjtimex (buf);
+  return INLINE_SYSCALL(adjtimex, 1, buf);
 }
 
 #ifdef VERSION_adjtimex
