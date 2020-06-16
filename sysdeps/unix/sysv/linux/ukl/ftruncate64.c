@@ -1,4 +1,4 @@
-/* Copyright (C) 2018 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,27 +13,26 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
-#include <sys/mman.h>
-#include <stdarg.h>
+#include <unistd.h>
 #include <sysdep.h>
+#include <errno.h>
 
-// TODO: header file
+#ifndef __NR_ftruncate64
+# define __NR_ftruncate64 __NR_ftruncate
+#endif
 
-void *
-__mremap (void *old_address, size_t old_size, size_t new_size, int flags, ... /* void *new_address */)
+/* Truncate the file referenced by FD to LENGTH bytes.  */
+int
+__ftruncate64 (int fd, off64_t length)
 {
-  if (flags & MREMAP_FIXED)
-    {
-      va_list ap;
-      va_start (ap, flags);
-      void *new_address = va_arg (ap, void *);
-      va_end (ap);
-      return (void *) INLINE_SYSCALL(mremap, 5, old_address, old_size, new_size, flags, new_address);
-    }
-  else
-    return (void *) INLINE_SYSCALL(mremap, 4, old_address, old_size, new_size, flags);
+  return INLINE_SYSCALL_CALL (ftruncate, fd,
+			      __ALIGNMENT_ARG SYSCALL_LL64 (length));
 }
-libc_hidden_def (__mremap)
-weak_alias (__mremap, mremap)
+weak_alias (__ftruncate64, ftruncate64)
+
+#ifdef __OFF_T_MATCHES_OFF64_T
+weak_alias (__ftruncate64, __ftruncate)
+weak_alias (__ftruncate64, ftruncate);
+#endif

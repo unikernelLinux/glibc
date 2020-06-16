@@ -1,4 +1,4 @@
-/* Copyright (C) 2018 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -13,18 +13,25 @@
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; if not, see
-   <http://www.gnu.org/licenses/>.  */
+   <https://www.gnu.org/licenses/>.  */
 
-#include <signal.h>
+#include <unistd.h>
+#include <sysdep.h>
+#include <errno.h>
 
-extern int ukl_sigaltstack (const stack_t *, stack_t *);
+#ifndef __NR_truncate64
+# define __NR_truncate64 __NR_truncate
+#endif
 
-/* Run signals handlers on the stack specified by SS (if not NULL).
-   If OSS is not NULL, it is filled in with the old signal stack status.  */
+/* Truncate PATH to LENGTH bytes.  */
 int
-__sigaltstack (const stack_t *ss, stack_t *oss)
+__truncate64 (const char *path, off64_t length)
 {
-  return ukl_sigaltstack (ss, oss);
+  return INLINE_SYSCALL_CALL (truncate, path,
+			      __ALIGNMENT_ARG SYSCALL_LL64 (length));
 }
-libc_hidden_def (__sigaltstack)
-weak_alias (__sigaltstack, sigaltstack)
+weak_alias (__truncate64, truncate64)
+
+#ifdef __OFF_T_MATCHES_OFF64_T
+weak_alias (__truncate64, truncate);
+#endif
