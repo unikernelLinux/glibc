@@ -161,12 +161,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
      _head->self = _thrdescr;						      \
 									      \
      /* It is a simple syscall to set the %fs value for the thread.  */	      \
-     asm volatile ("syscall"						      \
-		   : "=a" (_result)					      \
-		   : "0" ((unsigned long int) __NR_arch_prctl),		      \
-		     "D" ((unsigned long int) ARCH_SET_FS),		      \
-		     "S" (_thrdescr)					      \
-		   : "memory", "cc", "r11", "cx");			      \
+     _result = INTERNAL_SYSCALL(arch_prctl, err, 2, ARCH_SET_FS, _thrdescr);  \
 									      \
     _result ? "cannot set %fs base address for thread-local storage" : 0;     \
   })
