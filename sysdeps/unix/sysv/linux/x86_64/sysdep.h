@@ -223,8 +223,6 @@
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\
 	internal_syscall##nr (*(SYS_ify (name)), err, args)
 	
-//extern void (*(SYS_ify (name)));
-
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
 	internal_syscall##nr (number, err, args)
@@ -247,8 +245,7 @@
 #define internal_syscall1(number, err, arg1)				\
 ({									\
     unsigned long int resultvar;					\
-    TYPEFY (number, __number) = ARGIFY (number);			\
-    register TYPEFY (number, _n1) asm ("rax") = __number;		\
+    register void* _n1 asm ("rax") = number;				\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
@@ -263,8 +260,7 @@
 #define internal_syscall2(number, err, arg1, arg2)			\
 ({									\
     unsigned long int resultvar;					\
-    TYPEFY (number, __number) = ARGIFY (number);			\
-    register TYPEFY (number, _n1) asm ("rax") = __number;		\
+    register void* _n1 asm ("rax") = number;				\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
