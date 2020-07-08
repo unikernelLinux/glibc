@@ -225,14 +225,17 @@
 	
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
-	internal_syscall##nr (number, err, args)
+({	unsigned long int resultvar = -1;				\
+	 __set_errno(-1); 						\
+	 (long int) resultvar;						\
+ })
+//	internal_syscall##nr (number, err, args)
 
 #undef internal_syscall0
 #define internal_syscall0(number, err, dummy...)			\
 ({									\
     unsigned long int resultvar;					\
-    TYPEFY (number, __number) = ARGIFY (number);			\
-    register TYPEFY (number, _n1) asm ("rax") = __number;		\
+    register void* _n1 asm ("rax") = number;				\
     asm volatile (							\
     "call entry_SYSCALL_64\n\t"							\
     : "=a" (resultvar)							\
@@ -277,8 +280,7 @@
 #define internal_syscall3(number, err, arg1, arg2, arg3)		\
 ({									\
     unsigned long int resultvar;					\
-    TYPEFY (number, __number) = ARGIFY (number);			\
-    register TYPEFY (number, _n1) asm ("rax") = __number;		\
+    register void* _n1 asm ("rax") = number;				\
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
@@ -297,8 +299,7 @@
 #define internal_syscall4(number, err, arg1, arg2, arg3, arg4)		\
 ({									\
     unsigned long int resultvar;					\
-    TYPEFY (number, __number) = ARGIFY (number);			\
-    register TYPEFY (number, _n1) asm ("rax") = __number;		\
+    register void* _n1 asm ("rax") = number;				\
     TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
@@ -319,8 +320,7 @@
 #define internal_syscall5(number, err, arg1, arg2, arg3, arg4, arg5)	\
 ({									\
     unsigned long int resultvar;					\
-    TYPEFY (number, __number) = ARGIFY (number);			\
-    register TYPEFY (number, _n1) asm ("rax") = __number;		\
+    register void* _n1 asm ("rax") = number;				\
     TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
     TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
@@ -344,8 +344,7 @@
 #define internal_syscall6(number, err, arg1, arg2, arg3, arg4, arg5, arg6) \
 ({									\
     unsigned long int resultvar;					\
-    TYPEFY (number, __number) = ARGIFY (number);			\
-    register TYPEFY (number, _n1) asm ("rax") = __number;		\
+    register void* _n1 asm ("rax") = number;				\
     TYPEFY (arg6, __arg6) = ARGIFY (arg6);			 	\
     TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
     TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
