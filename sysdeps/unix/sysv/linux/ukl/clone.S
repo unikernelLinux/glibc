@@ -56,13 +56,11 @@ ENTRY (__clone)
 	jz	SYSCALL_ERROR_LABEL
 
 	/* Insert the argument onto the new stack.  */
-	subq	$24,%rsi
-	movq	%rcx,16(%rsi)
+	subq	$16,%rsi
+	movq	%rcx,8(%rsi)
 
 	/* Save the function pointer.  It will be popped off in the
 	   child in the ebx frobbing below.  */
-	movq	%rdi,8(%rsi)
-	leaq	cloneret, %rdi
 	movq	%rdi,0(%rsi)
 
 	/* Do the system call.  */
@@ -76,7 +74,7 @@ ENTRY (__clone)
 	   wrong.  */
 	cfi_endproc;
 	call	entry_SYSCALL_64
-cloneret:
+
 	testq	%rax,%rax
 	jl	SYSCALL_ERROR_LABEL
 	jz	L(thread_start)
