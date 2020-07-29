@@ -210,7 +210,7 @@
 # define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
 /* Registers clobbered by syscall.  */
-# define REGISTERS_CLOBBERED_BY_SYSCALL "cc", "r11", "cx"
+# define REGISTERS_CLOBBERED_BY_SYSCALL "cc", "r11", "r10"
 
 /* Create a variable 'name' based on type 'X' to avoid explicit types.
    This is mainly used set use 64-bits arguments in x32.   */
@@ -304,7 +304,7 @@
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    register TYPEFY (arg4, _a4) asm ("rcx") = __arg4;			\
     register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
@@ -327,7 +327,7 @@
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
     register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
-    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    register TYPEFY (arg4, _a4) asm ("rcx") = __arg4;			\
     register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
@@ -353,7 +353,7 @@
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
     register TYPEFY (arg6, _a6) asm ("r9") = __arg6;			\
     register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
-    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    register TYPEFY (arg4, _a4) asm ("rcx") = __arg4;			\
     register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\

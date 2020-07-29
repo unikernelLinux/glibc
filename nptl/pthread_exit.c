@@ -24,8 +24,8 @@ void
 __pthread_exit (void *value)
 {
   THREAD_SETMEM (THREAD_SELF, result, value);
-
-  __do_cancel ();
+  
+  exit(0);
 }
 weak_alias (__pthread_exit, pthread_exit)
 
