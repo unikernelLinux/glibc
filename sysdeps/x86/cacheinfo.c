@@ -482,9 +482,9 @@ int __x86_prefetchw attribute_hidden;
 #endif
 
 
-static void
-__attribute__((constructor))
-init_cacheinfo (void)
+// static void
+// __attribute__((constructor))
+void init_cacheinfo (void)
 {
   /* Find out what brand of processor.  */
   unsigned int eax;
@@ -497,6 +497,7 @@ init_cacheinfo (void)
   unsigned int level;
   unsigned int threads = 0;
   const struct cpu_features *cpu_features = __get_cpu_features ();
+  // printf("Cpu features: %u", cpu_features->basic.max_cpuid);
   int max_cpuid = cpu_features->basic.max_cpuid;
 
   if (cpu_features->basic.kind == arch_kind_intel)
