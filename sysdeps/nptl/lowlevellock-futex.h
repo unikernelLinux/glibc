@@ -58,7 +58,7 @@
     /* Prevent warnings in callers of this macro.  */		\
     int __lll_private_flag_priv __attribute__ ((unused));	\
     __lll_private_flag_priv = (private);			\
-    ((fl) | FUTEX_PRIVATE_FLAG);				\
+    (((fl) | FUTEX_PRIVATE_FLAG) ^ (private));				\
   })
 # else
 #  define __lll_private_flag(fl, private) \
