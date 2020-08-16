@@ -90,8 +90,8 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 
      The termination signal is chosen to be zero which means no signal
      is sent.  */
-  const int clone_flags = (CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SYSVSEM
-			   | CLONE_SIGHAND | CLONE_THREAD
+  const long clone_flags = (CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SYSVSEM
+			   | CLONE_SIGHAND | CLONE_THREAD | CLONE_UKL
 			   | CLONE_SETTLS | CLONE_PARENT_SETTID
 			   | CLONE_CHILD_CLEARTID
 			   | 0);
