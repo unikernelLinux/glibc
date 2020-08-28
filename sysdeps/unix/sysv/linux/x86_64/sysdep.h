@@ -217,9 +217,19 @@
    x32.  */
 #define ARGIFY(X) ((__typeof__ ((X) - (X))) (X))
 
+extern int get_ukl_run_to_completion(void);
+
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\
-	internal_syscall##nr (SYS_ify (name), err, args)
+	({                                                              \
+	 unsigned long int resultvar;                                   \
+	 if (get_ukl_run_to_completion() == 1){                         \
+	 	resultvar = __ukl_##name(args);				\
+	} else {                                                       \
+		resultvar = internal_syscall##nr (SYS_ify (name), err, args);   \
+	}                                                              \
+	(long int) resultvar;                                          \
+	})
 
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
