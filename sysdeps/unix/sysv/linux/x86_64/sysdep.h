@@ -219,16 +219,30 @@
 
 extern int get_ukl_run_to_completion(void);
 
+#define __type_is_void(expr) __builtin_types_compatible_p(typeof(expr), void)
+#define __expr_or_zero(expr, args, ...) __builtin_choose_expr(__type_is_void(expr), 0, (expr, args, __VA_ARGS__))
+ 
+#define __UKL(expr, args, ...) \
+	({ typeof(expr) __ret; __ret = (expr(args, __VA_ARGS__)); __ret; })
+ 
+#define __UKL_VOID(expr, args, ...) \
+	(void) (expr(args, __VA_ARGS__))
+
+#define UKLise(expr, args, ...) \
+    __builtin_choose_expr(__type_is_void(expr), \
+		__UKL_VOID(expr, args, __VA_ARGS__), \
+		__UKL(__expr_or_zero(expr, args, __VA_ARGS__)))
+ 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\
 	({                                                              \
-	 unsigned long int resultvar;                                   \
 	 if (get_ukl_run_to_completion() == 1){                         \
-	 	resultvar = __ukl_##name(args);				\
-	} else {                                                       \
-		resultvar = internal_syscall##nr (SYS_ify (name), err, args);   \
-	}                                                              \
-	(long int) resultvar;                                          \
+	 	__builtin_choose_expr(__builtin_types_compatible_p(typeof(__ukl_##name), void),\
+				(void) __ukl_##name(args),\
+				__ukl_##name(args));			\
+	} else {                                                        \
+		internal_syscall##nr (SYS_ify (name), err, args);  	\
+	}                                                              	\
 	})
 
 #undef INTERNAL_SYSCALL_NCS

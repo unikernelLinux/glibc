@@ -22,6 +22,8 @@
    threads in the process if there are any.  If there are no other
    threads left, then this has the effect of _exit (0).  */
 
+extern void __ukl_exit(int error_code);
+
 static inline void __attribute__ ((noreturn, always_inline, unused))
 __exit_thread (void)
 {
