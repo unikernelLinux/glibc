@@ -60,8 +60,6 @@ __close_nocancel_nostatus (int fd)
   __close_nocancel (fd);
 }
 
-extern ssize_t __ukl_writev(int fildes, const struct iovec *iov, int iovcnt);
-
 /* Non cancellable writev syscall that does not also set errno in case of
    failure.  */
 static inline void

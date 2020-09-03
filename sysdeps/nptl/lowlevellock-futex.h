@@ -65,8 +65,6 @@
   (((fl) | FUTEX_PRIVATE_FLAG) ^ (private))
 # endif
 
-extern long __ukl_futex(int *uaddr, int futex_op, ...);
-
 # define lll_futex_syscall(nargs, futexp, op, ...)                       \
   ({                                                                    \
     INTERNAL_SYSCALL_DECL (__err);                                      \

@@ -58,14 +58,12 @@ static const sigset_t sigall_set = {
    .__val = {[0 ...  _SIGSET_NWORDS-1 ] =  -1 }
 };
 
-extern int __ukl_rt_sigprocmask(int how, sigset_t * nset,  sigset_t * oset, size_t sigsetsize);
-
 /* Block all signals, including internal glibc ones.  */
 static inline void
 __libc_signal_block_all (sigset_t *set)
 {
   INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_BLOCK, (sigset_t *) &sigall_set, set,
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_BLOCK, &sigall_set, set,
 			 _NSIG / 8);
 }
 
@@ -85,7 +83,7 @@ static inline void
 __libc_signal_restore_set (const sigset_t *set)
 {
   INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_SETMASK, (sigset_t *) set, NULL,
+  INTERNAL_SYSCALL_CALL (rt_sigprocmask, err, SIG_SETMASK, set, NULL,
 			 _NSIG / 8);
 }
 
