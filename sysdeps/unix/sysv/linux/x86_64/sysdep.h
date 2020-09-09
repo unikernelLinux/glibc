@@ -217,11 +217,11 @@
    x32.  */
 #define ARGIFY(X) ((__typeof__ ((X) - (X))) (X))
 
-extern int get_ukl_run_to_completion(void);
+extern int get_ukl_bypass_syscall(void);
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\
-		internal_syscall##nr (name, SYS_ify2 (name), err, args);
+		internal_syscall##nr (name, SYS_ify (name), err, args);
 
 #undef INTERNAL_SYSCALL_NCS
 #define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
@@ -232,7 +232,7 @@ extern int get_ukl_run_to_completion(void);
 #define internal_syscall0(name, number, err, dummy...)			\
 ({									\
     unsigned long int resultvar;					\
-    if(get_ukl_run_to_completion()){					\
+    if(get_ukl_bypass_syscall()){					\
     	long int __ukl_##name(void);				\
 	resultvar = __ukl_##name();					\
     } else {								\
@@ -250,7 +250,7 @@ extern int get_ukl_run_to_completion(void);
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_run_to_completion()){					\
+    if(get_ukl_bypass_syscall()){					\
     	long int __ukl_##name(TYPEFY (arg1, __arg1));				\
 	resultvar = __ukl_##name(__arg1);					\
     } else {								\
@@ -270,7 +270,7 @@ extern int get_ukl_run_to_completion(void);
     unsigned long int resultvar;					\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_run_to_completion()){					\
+    if(get_ukl_bypass_syscall()){					\
     	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
 	resultvar = __ukl_##name(__arg1, __arg2);					\
     } else {								\
@@ -292,7 +292,7 @@ extern int get_ukl_run_to_completion(void);
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_run_to_completion()){					\
+    if(get_ukl_bypass_syscall()){					\
     	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
 	resultvar = __ukl_##name(__arg1, __arg2, __arg3);					\
     } else {								\
@@ -316,7 +316,7 @@ extern int get_ukl_run_to_completion(void);
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_run_to_completion()){					\
+    if(get_ukl_bypass_syscall()){					\
     	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
 	resultvar = __ukl_##name(__arg1, __arg2, __arg3, __arg4);					\
     } else {								\
@@ -342,7 +342,7 @@ extern int get_ukl_run_to_completion(void);
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_run_to_completion()){					\
+    if(get_ukl_bypass_syscall()){					\
     	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
 	resultvar = __ukl_##name(__arg1, __arg2, __arg3, __arg4, __arg5);		\
     } else {								\
@@ -371,7 +371,7 @@ extern int get_ukl_run_to_completion(void);
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_run_to_completion()){					\
+    if(get_ukl_bypass_syscall()){					\
     	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
 	resultvar = __ukl_##name(__arg1, __arg2, __arg3, __arg4, __arg5, __arg6);		\
     } else {								\
