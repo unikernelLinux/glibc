@@ -107,8 +107,9 @@
 #define INTERNAL_SYSCALL_CANCEL(...) \
   ({									     \
     long int sc_ret;							     \
-    if (SINGLE_THREAD_P) 						     \
+    if (SINGLE_THREAD_P){ 						     \
       sc_ret = INTERNAL_SYSCALL_CALL (__VA_ARGS__); 			     \
+      }										\
     else								     \
       {									     \
 	int sc_cancel_oldtype = LIBC_CANCEL_ASYNC ();			     \
