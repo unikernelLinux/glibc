@@ -218,7 +218,7 @@
 #define ARGIFY(X) ((__typeof__ ((X) - (X))) (X))
 
 extern int get_ukl_bypass_syscall(void);
-extern int set_ukl_bypass_syscall(int val);
+extern void set_ukl_bypass_syscall(int val);
 
 #ifdef UKL_BP
 #undef INTERNAL_SYSCALL
@@ -242,7 +242,6 @@ extern int set_ukl_bypass_syscall(int val);
     	: "=a" (resultvar)						\
     	: "0" (number)							\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
-	set_ukl_bypass_syscall(1);					\
     }									\
     (long int) resultvar;						\
 })
@@ -262,7 +261,6 @@ extern int set_ukl_bypass_syscall(int val);
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1)						\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
-	set_ukl_bypass_syscall(1);					\
     }									\
     (long int) resultvar;						\
 })
@@ -284,7 +282,6 @@ extern int set_ukl_bypass_syscall(int val);
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2)				\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
-	set_ukl_bypass_syscall(1);					\
     }									\
     (long int) resultvar;						\
 })
@@ -308,7 +305,6 @@ extern int set_ukl_bypass_syscall(int val);
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
-	set_ukl_bypass_syscall(1);					\
     }									\
     (long int) resultvar;						\
 })
@@ -334,7 +330,6 @@ extern int set_ukl_bypass_syscall(int val);
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
-	set_ukl_bypass_syscall(1);					\
     }									\
     (long int) resultvar;						\
 })
@@ -363,7 +358,6 @@ extern int set_ukl_bypass_syscall(int val);
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
       	"r" (_a5)								\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
-	set_ukl_bypass_syscall(1);					\
     }									\
     (long int) resultvar;						\
 })
@@ -394,7 +388,6 @@ extern int set_ukl_bypass_syscall(int val);
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
     	  "r" (_a5), "r" (_a6)						\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
-	set_ukl_bypass_syscall(1);					\
     }									\
     (long int) resultvar;						\
 })
