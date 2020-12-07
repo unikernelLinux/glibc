@@ -1,4 +1,4 @@
-/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,17 +15,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
 #include <errno.h>
+#include <unistd.h>
 #include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
 
-int
-__munmap (void *addr, size_t len)
+/* Get the effective user ID of the calling process.  */
+__uid_t
+__geteuid (void)
 {
-	return INLINE_SYSCALL(munmap, 2, addr, len);
+	return INLINE_SYSCALL(geteuid, 0);
 }
-strong_alias (__munmap, munmap)
+strong_alias (__geteuid, geteuid)

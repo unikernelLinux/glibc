@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* sendfile -- copy data directly from one file descriptor to another
+   Copyright (C) 2002-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,17 +16,14 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
+#include <sys/sendfile.h>
 #include <errno.h>
 #include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-
-int
-__munmap (void *addr, size_t len)
+/* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
+   descriptor OUT_FD.  */
+ssize_t
+sendfile (int out_fd, int in_fd, off_t *offset, size_t count)
 {
-	return INLINE_SYSCALL(munmap, 2, addr, len);
+	return INLINE_SYSCALL(sendfile, 4, out_fd, in_fd, offset, count);
 }
-strong_alias (__munmap, munmap)

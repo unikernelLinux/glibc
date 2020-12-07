@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* mlockall -- lock in core all the pages in this process.  Stub version.
+   Copyright (C) 2001-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,12 +21,12 @@
 #include <errno.h>
 #include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
+/* Cause all currently mapped pages of the process to be memory resident
+   until unlocked by a call to the `munlockall', until the process exits,
+   or until the process calls `execve'.  */
 
 int
-__munmap (void *addr, size_t len)
+mlockall (int flags)
 {
-	return INLINE_SYSCALL(munmap, 2, addr, len);
+	return INLINE_SYSCALL(mlockall, 1, flags);
 }
-strong_alias (__munmap, munmap)
