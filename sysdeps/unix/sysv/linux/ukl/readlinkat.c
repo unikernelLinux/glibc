@@ -1,4 +1,4 @@
-/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* Copyright (C) 2005-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,17 +15,28 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-
-int
-__munmap (void *addr, size_t len)
+/* Read the contents of the symbolic link PATH relative to FD into no
+   more than LEN bytes of BUF.  The contents are not null-terminated.
+   Returns the number of characters read, or -1 for errors.  */
+ssize_t
+readlinkat (int fd, const char *path, char *buf, size_t len)
 {
-	return INLINE_SYSCALL(munmap, 2, addr, len);
+  if (path == NULL)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+
+  if (fd != AT_FDCWD && fd < 0 && *path != '/')
+    {
+      __set_errno (EBADF);
+      return -1;
+    }
+
+  return INLINE_SYSCALL(readlinkat, 4, fd, path, buf, len);
 }
-strong_alias (__munmap, munmap)

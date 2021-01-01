@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* Advise system about intentions for a memory region.  Stub version.
+   Copyright (C) 1994-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,12 +21,12 @@
 #include <errno.h>
 #include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
+/* Advise the system about particular usage patterns the program follows
+   for the region starting at ADDR and extending LEN bytes.  */
 
 int
-__munmap (void *addr, size_t len)
+__madvise (void *addr, size_t len, int advice)
 {
-	return INLINE_SYSCALL(munmap, 2, addr, len);
+	return INLINE_SYSCALL(madvise, 3, addr, len, advice);
 }
-strong_alias (__munmap, munmap)
+strong_alias (__madvise, madvise)

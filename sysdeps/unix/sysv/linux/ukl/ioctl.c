@@ -1,4 +1,4 @@
-/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,17 +15,17 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
 #include <errno.h>
-#include <sysdep.h>
+#include <sys/ioctl.h>
+#include <stdio.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-
+/* Perform the I/O control operation specified by REQUEST on FD.
+   The actual type and use of ARG and the return value depend on REQUEST.  */
 int
-__munmap (void *addr, size_t len)
+__ioctl (int fd, unsigned long int request, ...)
 {
-	return INLINE_SYSCALL(munmap, 2, addr, len);
+	printf("Error: IOCTL should be made as a direct syscall\n");
+	while(1);
+	return -1;
 }
-strong_alias (__munmap, munmap)
+strong_alias (__ioctl, ioctl)

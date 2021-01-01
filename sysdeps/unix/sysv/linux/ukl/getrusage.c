@@ -1,4 +1,4 @@
-/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -15,17 +15,15 @@
    License along with the GNU C Library; if not, see
    <https://www.gnu.org/licenses/>.  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
+#include <sys/resource.h>
 #include <errno.h>
 #include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-
+/* Return resource usage information on process indicated by WHO
+   and put it in *USAGE.  Returns 0 for success, -1 for failure.  */
 int
-__munmap (void *addr, size_t len)
+__getrusage (enum __rusage_who who, struct rusage *usage)
 {
-	return INLINE_SYSCALL(munmap, 2, addr, len);
+	return INLINE_SYSCALL(getrusage, 2, who, usage);
 }
-strong_alias (__munmap, munmap)
+strong_alias (__getrusage, getrusage)

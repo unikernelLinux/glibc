@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* mlock -- guarantee pages are resident in memory.  Stub version.
+   Copyright (C) 2001-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,12 +21,11 @@
 #include <errno.h>
 #include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
+/* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
+   be memory resident.  */
 
 int
-__munmap (void *addr, size_t len)
+mlock (const void *addr, size_t len)
 {
-	return INLINE_SYSCALL(munmap, 2, addr, len);
+	return INLINE_SYSCALL(mlock, 2, addr, len);
 }
-strong_alias (__munmap, munmap)

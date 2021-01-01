@@ -1,4 +1,5 @@
-/* Copyright (C) 1994-2020 Free Software Foundation, Inc.
+/* getsid -- Return session ID of a process.  Stub version.
+   Copyright (C) 1995-2020 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +17,12 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/types.h>
-#include <sys/mman.h>
+#include <unistd.h>
 #include <errno.h>
 #include <sysdep.h>
 
-/* Deallocate any mapping for the region starting at ADDR and extending LEN
-   bytes.  Returns 0 if successful, -1 for errors (and sets errno).  */
-
-int
-__munmap (void *addr, size_t len)
+pid_t
+getsid (pid_t pid)
 {
-	return INLINE_SYSCALL(munmap, 2, addr, len);
+	return INLINE_SYSCALL(getsid, 1, pid);
 }
-strong_alias (__munmap, munmap)
