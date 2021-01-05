@@ -26,9 +26,5 @@
 int
 epoll_ctl (int epfd, int op, int fd, struct epoll_event *event)
 {
-  int ret;
-  set_ukl_bypass_syscall(1);
-  ret = INLINE_SYSCALL (epoll_ctl, 4, epfd, op, fd, event);
-  set_ukl_bypass_syscall(0);
-  return ret;
+  return INLINE_SYSCALL (epoll_ctl, 4, epfd, op, fd, event);
 }
