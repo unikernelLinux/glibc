@@ -220,7 +220,6 @@
 #ifdef UKL_BP
 
 extern int get_bypass_syscall(void);
-extern void set_bypass_syscall(int val);
 
 #undef INTERNAL_SYSCALL
 #define INTERNAL_SYSCALL(name, err, nr, args...)			\
@@ -234,9 +233,9 @@ extern void set_bypass_syscall(int val);
 #define internal_syscall0(name, number, err, dummy...)			\
 ({									\
     unsigned long int resultvar;					\
-    if(get_ukl_bypass_syscall()){					\
-    	long int __ukl_##name(void);				\
-	resultvar = __ukl_##name();					\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(void);				\
+	resultvar = bp_##name();					\
     } else {								\
     	asm volatile (							\
     	"call entry_SYSCALL_64\n\t"					\
@@ -252,9 +251,9 @@ extern void set_bypass_syscall(int val);
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_bypass_syscall()){					\
-    	long int __ukl_##name(TYPEFY (arg1, __arg1));				\
-	resultvar = __ukl_##name(__arg1);					\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1));				\
+	resultvar = bp_##name(__arg1);					\
     } else {								\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
@@ -272,9 +271,9 @@ extern void set_bypass_syscall(int val);
     unsigned long int resultvar;					\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_bypass_syscall()){					\
-    	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
-	resultvar = __ukl_##name(__arg1, __arg2);					\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2);					\
     } else {								\
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
@@ -294,9 +293,9 @@ extern void set_bypass_syscall(int val);
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_bypass_syscall()){					\
-    	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
-	resultvar = __ukl_##name(__arg1, __arg2, __arg3);					\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2, __arg3);					\
     } else {								\
     	register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
@@ -318,9 +317,9 @@ extern void set_bypass_syscall(int val);
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_bypass_syscall()){					\
-    	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
-	resultvar = __ukl_##name(__arg1, __arg2, __arg3, __arg4);					\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2, __arg3, __arg4);					\
     } else {								\
     	register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
     	register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
@@ -344,9 +343,9 @@ extern void set_bypass_syscall(int val);
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_bypass_syscall()){					\
-    	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
-	resultvar = __ukl_##name(__arg1, __arg2, __arg3, __arg4, __arg5);		\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2, __arg3, __arg4, __arg5);		\
     } else {								\
     	register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
     	register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
@@ -373,9 +372,9 @@ extern void set_bypass_syscall(int val);
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    if(get_ukl_bypass_syscall()){					\
-    	long int __ukl_##name(TYPEFY (arg1, __arg1), ...);		\
-	resultvar = __ukl_##name(__arg1, __arg2, __arg3, __arg4, __arg5, __arg6);		\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2, __arg3, __arg4, __arg5, __arg6);		\
     } else {								\
     	register TYPEFY (arg6, _a6) asm ("r9") = __arg6;			\
     	register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
