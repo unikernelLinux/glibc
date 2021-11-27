@@ -56,8 +56,7 @@ timer_create (clockid_t clock_id, struct sigevent *evp, timer_t *timerid)
 	   using struct timer as a derived class with the
 	   first two elements being in the superclass.  We only
 	   need these two elements here.  */
-	struct timer *newp = (struct timer *) malloc (offsetof (struct timer,
-								thrfunc));
+	struct timer *newp = (struct timer *) malloc (sizeof(struct timer));
 	if (newp == NULL)
 	  /* No more memory.  */
 	  return -1;
