@@ -18,14 +18,15 @@
 
 #include <stdlib.h>
 #include "pthreadP.h"
+#include <unistd.h>
 
 
 void
 __pthread_exit (void *value)
 {
   THREAD_SETMEM (THREAD_SELF, result, value);
-  
-  exit(0);
+  syscall(60, 0);
+  __builtin_unreachable();
 }
 weak_alias (__pthread_exit, pthread_exit)
 
