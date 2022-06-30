@@ -63,7 +63,8 @@ sysdep_routines += adjtimex clone umount umount2 readahead \
 		   open_by_handle_at mlock2 pkey_mprotect pkey_set pkey_get \
 		   epoll_create epoll_create1 epoll_ctl \
 		   timerfd_create prctl timerfd_settime capget capset inotify_init \
-		   inotify_add_watch chown symlink rmdir syncfs sched_setscheduler gettid
+		   inotify_add_watch chown symlink rmdir syncfs sched_setscheduler gettid \
+		   strerrordesc_np
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables
