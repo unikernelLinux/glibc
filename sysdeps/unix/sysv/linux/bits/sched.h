@@ -71,6 +71,7 @@
 # define CLONE_NEWPID	0x20000000	/* New pid namespace.  */
 # define CLONE_NEWNET	0x40000000	/* New network namespace.  */
 # define CLONE_IO	0x80000000	/* Clone I/O context.  */
+# define CLONE_UKL	0x100000000	/* Unikernel Linux Specific flag */
 
 /* cloning flags intersect with CSIGNAL so can be used only with unshare and
    clone3 syscalls.  */
