@@ -31,7 +31,7 @@
    of the kernel.  But these symbols do not follow the SYS_* syntax
    so we have to redefine the `SYS_ify' macro here.  */
 #undef SYS_ify
-#define SYS_ify(syscall_name)	__NR_##syscall_name
+#define SYS_ify(syscall_name)	__ukl_##syscall_name
 
 #ifdef __ASSEMBLER__
 

@@ -10,8 +10,10 @@ ifeq ($(subdir),csu)
 gen-as-const-headers += ucontext_i.sym
 endif
 
+ifneq ($(inhibit-ioperm-iopl),yes)
 ifeq ($(subdir),misc)
 gen-as-const-headers += sigaltstack-offsets.sym
+endif
 endif
 
 ifeq ($(subdir),elf)

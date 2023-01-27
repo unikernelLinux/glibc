@@ -19,7 +19,6 @@
 #ifndef _SHLIB_COMPAT_H
 #define _SHLIB_COMPAT_H	1
 
-# include <abi-versions.h>
 
 /* Obtain the definition of symbol_version_reference.  */
 #include <libc-symver.h>
@@ -44,6 +43,8 @@
        || ((ABI_##lib##_##introduced - 0) < (ABI_##lib##_##obsoleted - 0))))
 
 #ifdef SHARED
+
+# include <abi-versions.h>
 
 /* Similar to LIB_COMPAT, but evaluate to 0 for static build.  The
    compatibility code should be conditionalized with e.g.
