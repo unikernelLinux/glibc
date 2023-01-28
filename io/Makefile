@@ -57,7 +57,8 @@ routines :=								\
 	utimensat futimens file_change_detection			\
 	fts64-time64							\
 	ftw64-time64							\
-	closefrom close_range
+	closefrom close_range mount
+
 
 others		:= pwd
 test-srcs	:= ftwtest ftwtest-time64
