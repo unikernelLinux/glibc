@@ -33,7 +33,7 @@ __pthread_exit (void *value)
 
   THREAD_SETMEM (THREAD_SELF, result, value);
 
-  __do_cancel ();
+  exit(0);
 }
 libc_hidden_def (__pthread_exit)
 weak_alias (__pthread_exit, pthread_exit)
