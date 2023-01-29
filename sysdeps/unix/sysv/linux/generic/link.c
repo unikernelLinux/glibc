@@ -26,4 +26,4 @@ __link (const char *from, const char *to)
   return INLINE_SYSCALL (linkat, 5, AT_FDCWD, from, AT_FDCWD, to, 0);
 }
 
-weak_alias (__link, link)
+strong_alias (__link, link)
