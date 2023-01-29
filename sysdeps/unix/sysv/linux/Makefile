@@ -70,7 +70,9 @@ sysdep_routines += adjtimex clone umount umount2 readahead sysctl \
 		   fanotify_mark \
 		   mremap \
 	 	   epoll_create epoll_create1 epoll_ctl \
-		   timerfd_create \ 
+		   timerfd_create prctl timerfd_settime capget capset \
+		   inotify_init inotify_add_watch \
+		   chown symlink rmdir syncfs \
 
 CFLAGS-gethostid.c = -fexceptions
 CFLAGS-tee.c = -fexceptions -fasynchronous-unwind-tables
