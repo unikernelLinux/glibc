@@ -20,6 +20,7 @@
 #include <unwind-link.h>
 #include <stdio.h>
 #include <gnu/lib-names.h>
+#include <unistd.h>
 
 void
 __pthread_exit (void *value)
@@ -33,7 +34,8 @@ __pthread_exit (void *value)
 
   THREAD_SETMEM (THREAD_SELF, result, value);
 
-  exit(0);
+  syscall(60, 0);
+  __builtin_unreachable();
 }
 libc_hidden_def (__pthread_exit)
 weak_alias (__pthread_exit, pthread_exit)
