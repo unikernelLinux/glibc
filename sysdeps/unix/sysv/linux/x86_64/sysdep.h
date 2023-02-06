@@ -230,96 +230,125 @@
    explicit types.  */
 #define TYPEFY(X, name) __typeof__ (ARGIFY (X)) name
 
+#ifdef UKL_BP
+
+extern int get_bypass_syscall(void);
+
 #undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, nr, args...)				\
-	internal_syscall##nr (SYS_ify (name), args)
+#define INTERNAL_SYSCALL(name, err, nr, args...)			\
+	internal_syscall##nr (name, SYS_ify (name), err, args);
 
 #undef INTERNAL_SYSCALL_NCS
-#define INTERNAL_SYSCALL_NCS(number, nr, args...)			\
-	internal_syscall##nr (number, args)
+#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
+	internal_syscall_ndcl##nr (number, err, args)
 
 #undef internal_syscall0
-#define internal_syscall0(number, dummy...)				\
+#define internal_syscall0(name, number, err, dummy...)			\
 ({									\
     unsigned long int resultvar;					\
-    asm volatile (							\
-    "syscall\n\t"							\
-    : "=a" (resultvar)							\
-    : "0" (number)							\
-    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(void);				\
+	resultvar = bp_##name();					\
+    } else {								\
+    	asm volatile (							\
+    	"call entry_SYSCALL_64\n\t"					\
+    	: "=a" (resultvar)						\
+    	: "0" (number)							\
+    	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    }									\
     (long int) resultvar;						\
 })
 
 #undef internal_syscall1
-#define internal_syscall1(number, arg1)					\
+#define internal_syscall1(name, number, err, arg1)				\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
-    asm volatile (							\
-    "syscall\n\t"							\
-    : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1)						\
-    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1));				\
+	resultvar = bp_##name(__arg1);					\
+    } else {								\
+    	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    	asm volatile (							\
+    	"call entry_SYSCALL_64\n\t"							\
+    	: "=a" (resultvar)							\
+    	: "0" (number), "r" (_a1)						\
+    	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    }									\
     (long int) resultvar;						\
 })
 
 #undef internal_syscall2
-#define internal_syscall2(number, arg1, arg2)				\
+#define internal_syscall2(name, number, err, arg1, arg2)			\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
-    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
-    asm volatile (							\
-    "syscall\n\t"							\
-    : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2)				\
-    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2);					\
+    } else {								\
+    	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    	asm volatile (							\
+    	"call entry_SYSCALL_64\n\t"							\
+    	: "=a" (resultvar)							\
+    	: "0" (number), "r" (_a1), "r" (_a2)				\
+    	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    }									\
     (long int) resultvar;						\
 })
 
 #undef internal_syscall3
-#define internal_syscall3(number, arg1, arg2, arg3)			\
+#define internal_syscall3(name, number, err, arg1, arg2, arg3)		\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
-    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
-    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
-    asm volatile (							\
-    "syscall\n\t"							\
-    : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
-    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2, __arg3);					\
+    } else {								\
+    	register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    	asm volatile (							\
+    	"call entry_SYSCALL_64\n\t"							\
+    	: "=a" (resultvar)							\
+    	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
+    	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    }									\
     (long int) resultvar;						\
 })
 
 #undef internal_syscall4
-#define internal_syscall4(number, arg1, arg2, arg3, arg4)		\
+#define internal_syscall4(name, number, err, arg1, arg2, arg3, arg4)		\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
-    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
-    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
-    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
-    asm volatile (							\
-    "syscall\n\t"							\
-    : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
-    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2, __arg3, __arg4);					\
+    } else {								\
+    	register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    	register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    	asm volatile (							\
+    	"call entry_SYSCALL_64\n\t"							\
+    	: "=a" (resultvar)							\
+    	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
+    	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    }									\
     (long int) resultvar;						\
 })
 
 #undef internal_syscall5
-#define internal_syscall5(number, arg1, arg2, arg3, arg4, arg5)	\
+#define internal_syscall5(name, number, err, arg1, arg2, arg3, arg4, arg5)	\
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
@@ -327,22 +356,27 @@
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
-    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
-    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
-    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
-    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
-    asm volatile (							\
-    "syscall\n\t"							\
-    : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
-      "r" (_a5)								\
-    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2, __arg3, __arg4, __arg5);		\
+    } else {								\
+    	register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
+    	register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    	register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    	asm volatile (							\
+    	"call entry_SYSCALL_64\n\t"							\
+    	: "=a" (resultvar)							\
+    	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
+      	"r" (_a5)								\
+    	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    }									\
     (long int) resultvar;						\
 })
 
 #undef internal_syscall6
-#define internal_syscall6(number, arg1, arg2, arg3, arg4, arg5, arg6) \
+#define internal_syscall6(name, number, err, arg1, arg2, arg3, arg4, arg5, arg6) \
 ({									\
     unsigned long int resultvar;					\
     TYPEFY (arg6, __arg6) = ARGIFY (arg6);			 	\
@@ -351,21 +385,162 @@
     TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
     TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
-    register TYPEFY (arg6, _a6) asm ("r9") = __arg6;			\
-    register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
-    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
-    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
-    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
-    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
-    asm volatile (							\
-    "syscall\n\t"							\
-    : "=a" (resultvar)							\
-    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
-      "r" (_a5), "r" (_a6)						\
-    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    if(get_bypass_syscall()){					\
+    	long int bp_##name(TYPEFY (arg1, __arg1), ...);		\
+	resultvar = bp_##name(__arg1, __arg2, __arg3, __arg4, __arg5, __arg6);		\
+    } else {								\
+    	register TYPEFY (arg6, _a6) asm ("r9") = __arg6;			\
+    	register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
+    	register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    	register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    	asm volatile (							\
+    	"call entry_SYSCALL_64\n\t"							\
+    	: "=a" (resultvar)							\
+    	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
+    	  "r" (_a5), "r" (_a6)						\
+    	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    }									\
     (long int) resultvar;						\
 })
+#else // UKL_BP
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, err, nr, args...)                        \
+        internal_syscall##nr (SYS_ify (name), err, args)
 
+#undef INTERNAL_SYSCALL_NCS
+#define INTERNAL_SYSCALL_NCS(number, err, nr, args...)                  \
+        internal_syscall##nr (number, err, args)
+
+#undef internal_syscall0
+#define internal_syscall0(number, err, dummy...)                        \
+({                                                                      \
+    unsigned long int resultvar;                                        \
+    asm volatile (                                                      \
+    "call entry_SYSCALL_64\n\t"                                                     \
+    : "=a" (resultvar)                                                  \
+    : "0" (number)                                                      \
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
+    (long int) resultvar;                                               \
+})
+
+#undef internal_syscall1
+#define internal_syscall1(number, err, arg1)                            \
+({                                                                      \
+    unsigned long int resultvar;                                        \
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);                              \
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
+    asm volatile (                                                      \
+    "call entry_SYSCALL_64\n\t"                                                     \
+    : "=a" (resultvar)                                                  \
+    : "0" (number), "r" (_a1)                                           \
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
+    (long int) resultvar;                                               \
+})
+
+#undef internal_syscall2
+#define internal_syscall2(number, err, arg1, arg2)                      \
+({                                                                      \
+    unsigned long int resultvar;                                        \
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);                              \
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);                              \
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
+    asm volatile (                                                      \
+    "call entry_SYSCALL_64\n\t"                                                     \
+    : "=a" (resultvar)                                                  \
+    : "0" (number), "r" (_a1), "r" (_a2)                                \
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
+    (long int) resultvar;                                               \
+})
+
+#undef internal_syscall3
+#define internal_syscall3(number, err, arg1, arg2, arg3)                \
+({                                                                      \
+    unsigned long int resultvar;                                        \
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);                              \
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);                              \
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);                              \
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;                   \
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
+    asm volatile (                                                      \
+    "call entry_SYSCALL_64\n\t"                                                     \
+    : "=a" (resultvar)                                                  \
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)                     \
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
+    (long int) resultvar;                                               \
+})
+
+#undef internal_syscall4
+#define internal_syscall4(number, err, arg1, arg2, arg3, arg4)          \
+({                                                                      \
+    unsigned long int resultvar;                                        \
+    TYPEFY (arg4, __arg4) = ARGIFY (arg4);                              \
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);                              \
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);                              \
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);                              \
+    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;                   \
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;                   \
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
+    asm volatile (                                                      \
+    "call entry_SYSCALL_64\n\t"                                                     \
+    : "=a" (resultvar)                                                  \
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)          \
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
+    (long int) resultvar;                                               \
+})
+
+#undef internal_syscall5
+#define internal_syscall5(number, err, arg1, arg2, arg3, arg4, arg5)    \
+({                                                                      \
+    unsigned long int resultvar;                                        \
+    TYPEFY (arg5, __arg5) = ARGIFY (arg5);                              \
+    TYPEFY (arg4, __arg4) = ARGIFY (arg4);                              \
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);                              \
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);                              \
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);                              \
+    register TYPEFY (arg5, _a5) asm ("r8") = __arg5;                    \
+    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;                   \
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;                   \
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
+    asm volatile (                                                      \
+    "call entry_SYSCALL_64\n\t"                                                     \
+    : "=a" (resultvar)                                                  \
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),         \
+      "r" (_a5)                                                         \
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
+    (long int) resultvar;                                               \
+})
+
+#undef internal_syscall6
+#define internal_syscall6(number, err, arg1, arg2, arg3, arg4, arg5, arg6) \
+({                                                                      \
+    unsigned long int resultvar;                                        \
+    TYPEFY (arg6, __arg6) = ARGIFY (arg6);                              \
+    TYPEFY (arg5, __arg5) = ARGIFY (arg5);                              \
+    TYPEFY (arg4, __arg4) = ARGIFY (arg4);                              \
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);                              \
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);                              \
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);                              \
+    register TYPEFY (arg6, _a6) asm ("r9") = __arg6;                    \
+    register TYPEFY (arg5, _a5) asm ("r8") = __arg5;                    \
+    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;                   \
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;                   \
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
+    asm volatile (                                                      \
+    "call entry_SYSCALL_64\n\t"                                                     \
+    : "=a" (resultvar)                                                  \
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),         \
+      "r" (_a5), "r" (_a6)                                              \
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
+    (long int) resultvar;                                               \
+})
+#endif // UKL_BP
 
 # define VDSO_NAME  "LINUX_2.6"
 # define VDSO_HASH  61765110
@@ -431,3 +606,131 @@
 #define STACK_SIZE_TO_SHADOW_STACK_SIZE_SHIFT 5
 
 #endif /* linux/x86_64/sysdep.h */
+
+#undef internal_syscall_ndcl0
+#define internal_syscall_ndcl0(number, err, dummy...)			 \
+({									\
+    unsigned long int resultvar;					\
+    asm volatile (							\
+    "call ukl_entry_SYSCALL_64\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number)							\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall_ndcl1
+#define internal_syscall_ndcl1(number, err, arg1)			 \
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "call ukl_entry_SYSCALL_64\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1)						\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall_ndcl2
+#define internal_syscall_ndcl2(number, err, arg1, arg2)		 \
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "call ukl_entry_SYSCALL_64\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2)				\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall_ndcl3
+#define internal_syscall_ndcl3(number, err, arg1, arg2, arg3)		 \
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "call ukl_entry_SYSCALL_64\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall_ndcl4
+#define internal_syscall_ndcl4(number, err, arg1, arg2, arg3, arg4) \
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "call ukl_entry_SYSCALL_64\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall_ndcl5
+#define internal_syscall_ndcl5(number, err, arg1, arg2, arg3, arg4, arg5) \
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
+    TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
+    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "call ukl_entry_SYSCALL_64\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
+      "r" (_a5)								\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
+
+#undef internal_syscall_ndcl6
+#define internal_syscall_ndcl6(number, err, arg1, arg2, arg3, arg4, arg5, arg6) \
+({									\
+    unsigned long int resultvar;					\
+    TYPEFY (arg6, __arg6) = ARGIFY (arg6);			 	\
+    TYPEFY (arg5, __arg5) = ARGIFY (arg5);			 	\
+    TYPEFY (arg4, __arg4) = ARGIFY (arg4);			 	\
+    TYPEFY (arg3, __arg3) = ARGIFY (arg3);			 	\
+    TYPEFY (arg2, __arg2) = ARGIFY (arg2);			 	\
+    TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
+    register TYPEFY (arg6, _a6) asm ("r9") = __arg6;			\
+    register TYPEFY (arg5, _a5) asm ("r8") = __arg5;			\
+    register TYPEFY (arg4, _a4) asm ("r10") = __arg4;			\
+    register TYPEFY (arg3, _a3) asm ("rdx") = __arg3;			\
+    register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
+    register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
+    asm volatile (							\
+    "call ukl_entry_SYSCALL_64\n\t"							\
+    : "=a" (resultvar)							\
+    : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
+      "r" (_a5), "r" (_a6)						\
+    : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
+    (long int) resultvar;						\
+})
