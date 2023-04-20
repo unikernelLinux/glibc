@@ -980,8 +980,19 @@ in-module = $(subst -,_,$(firstword $(libof-$(basename $(@F))) \
 tls-model = $(if $(filter libpthread rtld \
 			  libc,$(in-module)),-ftls-model=initial-exec,)
 
+ifeq (yes,$(build-shared))
 module-cppflags-real = -include $(common-objpfx)libc-modules.h \
 		       -DMODULE_NAME=$(in-module)
+else
+module-cppflags-real = -DMODULE_NAME=$(in-module) -DMODULE_libc=0 \
+	-DMODULE_testsuite=2 -DMODULE_rtld=1 -DMODULE_libpthread=0 \
+	-DMODULE_nonlib=3 -DMODULE_ldconfig=4 -DMODULE_libutil=0 \
+	-DMODULE_libnsl=0 -DMODULE_libnss_files=0 -DMODULE_libnss_nisplus=0 \
+	-DMODULE_libdl=0 -DMODULE_librt=0 -DMODULE_libresolv=0 \
+	-DMODULE_libmvec=0 -DMODULE_libm=0 -DMODULE_LIBS_BEGIN=0 \
+	-DMODULE_nscd=5 -DMODULE_libnss_dns=0 -DMODULE_iconvprogs=6 \
+	-DMODULE_libcrypt=0 -DMODULE_libanl=0 -DMODULE_libsupport=0
+endif
 
 # We don't need libc-modules.h and the MODULE_NAME definition for .v.i
 # files.  These targets don't (and will likely never need to) use the IS_IN
@@ -1021,8 +1032,10 @@ override CXXFLAGS = -I$(common-objpfx) $(c++-sysincludes) \
 
 # If everything is compiled with -fPIC (implicitly) we must tell this by
 # defining the PIC symbol.
+ifneq (no,$(build-pie-default))
 ifeq (yes,$(build-pic-default))
 pic-default = -DPIC
+endif
 endif
 
 # Enable object files for different versions of the library.
@@ -1308,9 +1321,6 @@ endif
 
 ifeq ($(build-shared),yes)
 libsupport = $(common-objpfx)support/libsupport_nonshared.a
-else
-libsupport = $(common-objpfx)support/libsupport.a
-endif
 
 # This is a partial list of subdirectories containing the library source.
 # The order is more or less arbitrary.  The sorting step will take care of the
@@ -1321,6 +1331,21 @@ all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
 	      gnulib iconv iconvdata wctype manual shadow gshadow po argp   \
 	      localedata timezone rt conform debug mathvec support	    \
 	      dlfcn elf
+
+else
+libsupport = $(common-objpfx)support/libsupport.a
+
+# This is a partial list of subdirectories containing the library source.
+# The order is more or less arbitrary.  The sorting step will take care of the
+# dependencies and generate sorted-subdirs dynamically.
+all-subdirs = csu assert ctype locale intl catgets math setjmp signal	    \
+	      stdlib stdio-common libio malloc string wcsmbs time dirent    \
+	      grp pwd posix io termios resource misc socket sysvipc gmon    \
+	      gnulib iconv iconvdata wctype manual shadow gshadow po argp   \
+	      localedata timezone rt conform debug mathvec support	    \
+	      elf
+
+endif
 
 ifeq ($(build-crypt),yes)
 all-subdirs += crypt
