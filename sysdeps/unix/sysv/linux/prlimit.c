@@ -16,6 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <sys/resource.h>
+#include <sys/syscall.h>
 #include <sysdep.h>
 
 /* For ports that support the 64-bit ABI we do not need to define prlimit
