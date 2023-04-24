@@ -16,6 +16,8 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <sysdep.h>
 #include <sys/types.h>
 #include <sysdep.h>
 

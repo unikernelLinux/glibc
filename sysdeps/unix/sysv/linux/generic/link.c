@@ -16,6 +16,7 @@
    <https://www.gnu.org/licenses/>.  */
 
 #include <unistd.h>
+#include <sysdep.h>
 #include <fcntl.h>
 #include <sysdep.h>
 

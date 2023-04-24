@@ -20,6 +20,7 @@
 #include <unwind-link.h>
 #include <stdio.h>
 #include <gnu/lib-names.h>
+#include <unistd.h>
 
 void
 __pthread_exit (void *value)
