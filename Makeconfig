@@ -990,7 +990,8 @@ module-cppflags-real = -DMODULE_NAME=$(in-module) -DMODULE_libc=0 \
 	-DMODULE_libnsl=0 -DMODULE_libnss_files=0 -DMODULE_libnss_nisplus=0 \
 	-DMODULE_libdl=0 -DMODULE_librt=0 -DMODULE_libresolv=0 \
 	-DMODULE_libmvec=0 -DMODULE_libm=0 -DMODULE_LIBS_BEGIN=0 \
-	-DMODULE_nscd=5 -DMODULE_libnss_dns=0 -DMODULE_iconvprogs=6
+	-DMODULE_nscd=5 -DMODULE_libnss_dns=0 -DMODULE_iconvprogs=6 \
+	-DMODULE_libcrypt=0 -DMODULE_libanl=0 -DMODULE_libsupport=0
 endif
 
 # We don't need libc-modules.h and the MODULE_NAME definition for .v.i
