@@ -71,6 +71,7 @@
 # define CLONE_NEWPID	0x20000000	/* New pid namespace.  */
 # define CLONE_NEWNET	0x40000000	/* New network namespace.  */
 # define CLONE_IO	0x80000000	/* Clone I/O context.  */
+# define CLONE_UKL	0x100000000	/* Unikernel Linux Specific flag */
 
 /* cloning flags intersect with CSIGNAL so can be used only with unshare and
    clone3 syscalls.  */
@@ -84,7 +85,7 @@ __BEGIN_DECLS
 #ifdef __USE_GNU
 /* Clone current process.  */
 extern int clone (int (*__fn) (void *__arg), void *__child_stack,
-		  int __flags, void *__arg, ...) __THROW;
+		  long __flags, void *__arg, ...) __THROW;
 
 /* Unshare the specified resources.  */
 extern int unshare (int __flags) __THROW;
