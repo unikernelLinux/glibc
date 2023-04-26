@@ -135,7 +135,9 @@
   ({									     \
     long int sc_ret;							     \
     if (NO_SYSCALL_CANCEL_CHECKING) 					     \
-      sc_ret = INTERNAL_SYSCALL_CALL (__VA_ARGS__); 			     \
+      {									     \
+        sc_ret = INTERNAL_SYSCALL_CALL (__VA_ARGS__); 			     \
+      }									     \
     else								     \
       {									     \
 	int sc_cancel_oldtype = LIBC_CANCEL_ASYNC ();			     \
