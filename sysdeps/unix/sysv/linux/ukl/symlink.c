@@ -24,6 +24,4 @@ __symlink(const char *target, const char *linkpath)
 {
 	return INLINE_SYSCALL(symlink, 2, target, linkpath);
 }
-libc_hidden_def (__symlink)
-
-strong_alias (__symlink, symlink)
+weak_alias (__symlink, symlink)

@@ -19,11 +19,10 @@
 #include <unistd.h>
 #include <sysdep.h>
 
+
 int
 __setitimer(enum __itimer_which which, const struct itimerval *new, struct itimerval *old)
 {
 	return INLINE_SYSCALL(setitimer, 3, which, new, old);
 }
-libc_hidden_def (__setitimer)
-
-strong_alias (__setitimer, setitimer)
+weak_alias (__setitimer, setitimer)

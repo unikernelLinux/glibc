@@ -24,6 +24,4 @@ __rmdir(const char *pathname)
 {
 	return INLINE_SYSCALL(rmdir, 1, pathname);
 }
-libc_hidden_def (__rmdir)
-
-strong_alias (__rmdir, rmdir)
+weak_alias (__rmdir, rmdir)

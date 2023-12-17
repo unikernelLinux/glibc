@@ -25,6 +25,5 @@ __getppid (void)
 {
 	return INLINE_SYSCALL(getppid, 0);
 }
-libc_hidden_def (__getppid)
 
-strong_alias (__getppid, getppid)
+weak_alias (__getppid, getppid)

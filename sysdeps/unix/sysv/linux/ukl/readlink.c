@@ -29,6 +29,4 @@ __readlink(const char *pathname, char *buf, size_t bufsiz)
     }
   return INLINE_SYSCALL(readlink, 3, pathname, buf, bufsiz);
 }
-libc_hidden_def (__readlink)
-
-strong_alias (__readlink, readlink)
+weak_alias (__readlink, readlink)

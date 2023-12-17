@@ -26,4 +26,5 @@ __sigaltstack (const stack_t *ss, stack_t *oss)
   return INLINE_SYSCALL(sigaltstack, 2, ss, oss);
 }
 libc_hidden_def (__sigaltstack)
+
 weak_alias (__sigaltstack, sigaltstack)

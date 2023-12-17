@@ -28,4 +28,6 @@ __setpriority (enum __priority_which which, id_t who, int prio)
 {
    return INLINE_SYSCALL (setpriority, 3, (int) which, who, prio);
 }
-strong_alias (__setpriority, setpriority)
+libc_hidden_def(__setpriority)
+
+weak_alias (__setpriority, setpriority)

@@ -24,7 +24,7 @@
 #include <sys/utsname.h>
 #include <unistd.h>
 
-/* Put information about the system in NAME.  */
+/* Put information about the system in NAME.  */	
 int
 __uname (struct utsname *name)
 {
@@ -56,4 +56,6 @@ __uname (struct utsname *name)
 
   return 0;
 }
-strong_alias (__uname, uname)
+libc_hidden_def(__uname)
+
+weak_alias (__uname,uname)

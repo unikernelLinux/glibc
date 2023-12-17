@@ -32,4 +32,6 @@ __mprotect (void *addr, size_t len, int prot)
 {
 	return INLINE_SYSCALL(mprotect, 3, addr, len, prot);
 }
-strong_alias (__mprotect, mprotect)
+libc_hidden_def(__mprotect)
+
+weak_alias (__mprotect, mprotect)

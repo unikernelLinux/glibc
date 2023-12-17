@@ -25,6 +25,4 @@ __statfs64 (const char *path, struct statfs64 *buf)
 {
   return INLINE_SYSCALL(statfs, 2, path, buf);
 }
-libc_hidden_def (__statfs64)
-
-strong_alias (__statfs64, statfs64)
+weak_alias (__statfs64, statfs64)

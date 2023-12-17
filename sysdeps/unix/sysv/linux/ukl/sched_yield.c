@@ -26,4 +26,6 @@ __sched_yield (void)
 {
 	return INLINE_SYSCALL(sched_yield, 0);
 }
-strong_alias (__sched_yield, sched_yield)
+libc_hidden_def(__sched_yield)
+
+weak_alias (__sched_yield, sched_yield)
