@@ -35,10 +35,7 @@ __BEGIN_DECLS
 
 /* The error code set by various library functions.  */
 extern int *__errno_location (void) __THROW __attribute_const__;
-__thread int errno;
-extern __thread int __libc_errno __attribute__ ((alias ("errno")))
-attribute_hidden;
-# define errno __libc_errno
+#define errno (*__errno_location ())
 
 # ifdef __USE_GNU
 
