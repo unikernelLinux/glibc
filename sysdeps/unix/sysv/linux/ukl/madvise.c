@@ -29,4 +29,6 @@ __madvise (void *addr, size_t len, int advice)
 {
 	return INLINE_SYSCALL(madvise, 3, addr, len, advice);
 }
-strong_alias (__madvise, madvise)
+libc_hidden_def(__madvise)
+
+weak_alias (__madvise, madvise)

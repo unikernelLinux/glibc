@@ -30,6 +30,8 @@
 # include <kernel-features.h>
 # include <dl-dtv.h>
 
+
+
 /* Replacement type for __m128 since this file is included by ld.so,
    which is compiled with -mno-sse.  It must not change the alignment
    of rtld_savespace_sse.  */
@@ -151,6 +153,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 
    We have to make the syscall for both uses of the macro since the
    address might be (and probably is) different.  */
+void *entry_SYSCALL_64 __attribute__ ((weak));
 # define TLS_INIT_TP(thrdescr) \
   ({ void *_thrdescr = (thrdescr);					      \
      tcbhead_t *_head = _thrdescr;					      \

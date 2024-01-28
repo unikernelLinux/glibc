@@ -56,4 +56,6 @@ __uname (struct utsname *name)
 
   return 0;
 }
-strong_alias (__uname, uname)
+libc_hidden_def(__uname)
+
+weak_alias (__uname, uname)

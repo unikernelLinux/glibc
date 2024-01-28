@@ -26,4 +26,6 @@ __sched_setscheduler (pid_t pid, int policy, const struct sched_param *param)
 {
 	return INLINE_SYSCALL(sched_setscheduler, 3, pid, policy, param);
 }
-strong_alias (__sched_setscheduler, sched_setscheduler)
+libc_hidden_def(__sched_setscheduler)
+
+weak_alias (__sched_setscheduler, sched_setscheduler)

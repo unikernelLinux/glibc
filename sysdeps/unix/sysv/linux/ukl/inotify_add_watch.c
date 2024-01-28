@@ -30,6 +30,4 @@ __inotify_add_watch (int fd, const char *pathname, uint32_t mask)
     }
   return INLINE_SYSCALL(inotify_add_watch, 3, fd, pathname, mask);
 }
-libc_hidden_def (__inotify_add_watch)
-
-strong_alias (__inotify_add_watch, inotify_add_watch)
+weak_alias (__inotify_add_watch, inotify_add_watch)

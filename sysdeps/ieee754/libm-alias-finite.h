@@ -19,6 +19,7 @@
 #ifndef _LIBM_ALIAS_FINITE_H
 #define _LIBM_ALIAS_FINITE_H
 
+#include <first-versions.h>
 #include <shlib-compat.h>
 
 /* The -ffinite-math symbols were added on GLIBC 2.15 and moved to compat

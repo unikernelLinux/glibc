@@ -25,6 +25,5 @@ __capget (cap_user_header_t hdrp, cap_user_data_t datap)
 {
   return INLINE_SYSCALL(capget, 2, hdrp, datap);
 }
-libc_hidden_def (__capget)
+weak_alias (__capget, capget)
 
-strong_alias (__capget, capget)

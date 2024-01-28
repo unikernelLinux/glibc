@@ -27,4 +27,6 @@ __sched_setparam (pid_t pid, const struct sched_param *param)
 {
 	return INLINE_SYSCALL(sched_setparam, 2, pid, param);
 }
-strong_alias (__sched_setparam, sched_setparam)
+libc_hidden_def(__sched_setparam)
+
+weak_alias (__sched_setparam, sched_setparam)

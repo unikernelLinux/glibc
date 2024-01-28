@@ -25,6 +25,4 @@ __capset (cap_user_header_t hdrp, const	cap_user_data_t datap)
 {
   return INLINE_SYSCALL(capset, 2, hdrp, datap);
 }
-libc_hidden_def (__capset)
-
-strong_alias (__capset, capset)
+weak_alias (__capset, capset)

@@ -25,6 +25,8 @@ __getpid (void)
 {
 	return INLINE_SYSCALL(getpid, 0);
 }
-libc_hidden_def (__getpid)
+libc_hidden_def(__getpid)
 
-strong_alias (__getpid, getpid)
+weak_alias (__getpid, getpid)
+
+libc_hidden_weak(getpid)

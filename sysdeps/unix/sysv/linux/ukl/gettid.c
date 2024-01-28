@@ -24,6 +24,4 @@ __gettid (void)
 {
 	return INLINE_SYSCALL(gettid, 0);
 }
-libc_hidden_def (__gettid)
-
-strong_alias (__gettid, gettid)
+weak_alias (__gettid, gettid)

@@ -24,6 +24,4 @@ __syncfs(int fd)
 {
 	return INLINE_SYSCALL(syncfs, 1, fd);
 }
-libc_hidden_def (__syncfs)
-
-strong_alias (__syncfs, syncfs)
+weak_alias (__syncfs, syncfs)

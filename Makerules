@@ -646,6 +646,7 @@ LDFLAGS-c.so += -e __libc_main
 # from being allocated in libc.so, which introduces evil dependencies
 # between libc.so and ld.so, which can make it impossible to upgrade.
 $(common-objpfx)libc_pic.os: $(common-objpfx)libc_pic.a
+	@echo $(We're archiving?? [${LINK.o}])
 	$(LINK.o) -nostdlib -nostartfiles -r -o $@ \
 	$(LDFLAGS-c_pic.os) -Wl,-d $(whole-archive) $^ -o $@
 

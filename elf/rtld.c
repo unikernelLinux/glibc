@@ -48,6 +48,8 @@
 
 #include <assert.h>
 
+// MODIFY
+
 /* Only enables rtld profiling for architectures which provides non generic
    hp-timing support.  The generic support requires either syscall
    (clock_gettime), which will incur in extra overhead on loading time.

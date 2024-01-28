@@ -23,7 +23,7 @@
 /* Usage: long syscall (syscall_number, arg1, arg2, arg3, arg4, arg5, arg6)
    We need to do some arg shifting, the syscall_number will be in
    rax.  */
-
+	.weak entry_SYSCALL_64
 
 	.text
 ENTRY (syscall)

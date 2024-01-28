@@ -26,4 +26,4 @@ __chown(const char *pathname, uid_t owner, gid_t group)
 }
 libc_hidden_def (__chown)
 
-strong_alias (__chown, chown)
+weak_alias (__chown, chown)

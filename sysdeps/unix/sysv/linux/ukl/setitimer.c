@@ -24,6 +24,6 @@ __setitimer(enum __itimer_which which, const struct itimerval *new, struct itime
 {
 	return INLINE_SYSCALL(setitimer, 3, which, new, old);
 }
-libc_hidden_def (__setitimer)
 
 strong_alias (__setitimer, setitimer)
+

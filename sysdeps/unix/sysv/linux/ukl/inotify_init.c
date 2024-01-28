@@ -25,15 +25,12 @@ __inotify_init (void)
 {
   return INLINE_SYSCALL(inotify_init, 0);
 }
-libc_hidden_def (__inotify_init)
-
-strong_alias (__inotify_init, inotify_init)
+weak_alias (__inotify_init, inotify_init)
 
 int
 __inotify_init1 (int flags)
 {
   return INLINE_SYSCALL(inotify_init1, 1, flags);
 }
-libc_hidden_def (__inotify_init1)
+weak_alias (__inotify_init1, inotify_init1)
 
-strong_alias (__inotify_init1, inotify_init1)
