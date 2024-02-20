@@ -6,6 +6,7 @@
 *.bz2
 *.rej
 *.orig
+cscope.*
 =*
 TAGS
 TODO
