@@ -229,7 +229,7 @@ extern int get_bypass_syscall(void);
 #define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
 	internal_syscall_ndcl##nr (number, err, args)
 
-void *entry_SYSCALL_64 __attribute__ ((weak));
+extern void (*entry_SYSCALL_64)(void);
 
 #undef internal_syscall0
 #define internal_syscall0(name, number, err, dummy...)			\

@@ -153,7 +153,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 
    We have to make the syscall for both uses of the macro since the
    address might be (and probably is) different.  */
-void *entry_SYSCALL_64 __attribute__ ((weak));
+extern void (*entry_SYSCALL_64)(void);
 # define TLS_INIT_TP(thrdescr) \
   ({ void *_thrdescr = (thrdescr);					      \
      tcbhead_t *_head = _thrdescr;					      \

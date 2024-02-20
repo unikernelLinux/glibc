@@ -422,7 +422,7 @@ ifndef +link-pie
 						    S$(start-installed-name))\
 			  $(+preinit) $(link-extra-libs) \
 			  $(common-objpfx)libc% $(+postinit),$^) \
-	     $(link-extra-libs)
+	     $(link-extra-libs) \
 +link-pie-after-libc = $(+postctorS) $(+postinit)
 define +link-pie
 $(CC) $(link-libc-rpath-link) $(+link-pie-before-libc) $(rtld-LDFLAGS) \

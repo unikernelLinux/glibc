@@ -543,7 +543,8 @@ $(LINK.o) -shared -static-libgcc -Wl,-O1 $(sysdep-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-lib.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
-	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link)
+	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
+	  $(objpfx)../../dummy-entry.o
 endef
 
 ifeq (yes,$(use-default-link))
