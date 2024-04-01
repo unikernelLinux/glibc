@@ -2019,8 +2019,9 @@ _dl_map_object (struct link_map *loader, const char *name,
 
 	  /* First try the DT_RPATH of the dependent object that caused NAME
 	     to be loaded.  Then that object's dependent, and on up.  */
-	  for (l = loader; l; l = l->l_loader)
-	    if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
+	  l = loader;
+          while (l) {
+            if (cache_rpath (l, &l->l_rpath_dirs, DT_RPATH, "RPATH"))
 	      {
 		fd = open_path (name, namelen, mode,
 				&l->l_rpath_dirs,
@@ -2031,6 +2032,8 @@ _dl_map_object (struct link_map *loader, const char *name,
 
 		did_main_map |= l == main_map;
 	      }
+            l = l->l_loader;
+          }
 
 	  /* If dynamically linked, try the DT_RPATH of the executable
 	     itself.  NB: we do this for lookups in any namespace.  */

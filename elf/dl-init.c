@@ -104,15 +104,14 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 	((init_t) addrs[cnt]) (argc, argv, env);
     }
 
-  /* Stupid users forced the ELF specification to be changed.  It now
-     says that the dynamic loader is responsible for determining the
+  /* The dynamic loader is responsible for determining the
      order in which the constructors have to run.  The constructors
      for all dependencies of an object must run before the constructor
      for the object itself.  Circular dependencies are left unspecified.
 
-     This is highly questionable since it puts the burden on the dynamic
+     This puts the burden on the dynamic
      loader which has to find the dependencies at runtime instead of
-     letting the user do it right.  Stupidity rules!  */
+     letting the user do it. */
 
   i = main_map->l_searchlist.r_nlist;
   while (i-- > 0)

@@ -541,7 +541,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
 		  -Wl,-soname=$(rtld-installed-name)			\
 		  -Wl,-defsym=_begin=0					\
-		  $(objpfx)/../../dummy-entry.o
+		  $(objpfx)/../../entry-patch.o
 	$(call after-link,$@.new)
 	$(READELF) -s $@.new \
 	  | $(AWK) '($$7 ~ /^UND(|EF)$$/ && $$1 != "0:" && $$4 != "REGISTER") { print; p=1 } END { exit p != 0 }'

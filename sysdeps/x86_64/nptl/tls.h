@@ -153,7 +153,6 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 
    We have to make the syscall for both uses of the macro since the
    address might be (and probably is) different.  */
-extern void (*entry_SYSCALL_64)(void);
 # define TLS_INIT_TP(thrdescr) \
   ({ void *_thrdescr = (thrdescr);					      \
      tcbhead_t *_head = _thrdescr;					      \
@@ -164,7 +163,8 @@ extern void (*entry_SYSCALL_64)(void);
      _head->self = _thrdescr;						      \
 									      \
      /* It is a simple syscall to set the %fs value for the thread.  */	      \
-     asm volatile ("call entry_SYSCALL_64"						      \
+     asm volatile ("movq entry_SYSCALL_64(%%rip), %%rcx \n\t"		      \
+		   "call *%%rcx \n\t"					      \
 		   : "=a" (_result)					      \
 		   : "0" ((unsigned long int) __NR_arch_prctl),		      \
 		     "D" ((unsigned long int) ARCH_SET_FS),		      \
@@ -189,11 +189,33 @@ extern void (*entry_SYSCALL_64)(void);
    assignments like
 	pthread_descr self = thread_self();
    do not get optimized away.  */
+
 # define THREAD_SELF \
   ({ struct pthread *__self;						      \
-     asm ("mov %%fs:%c1,%0" : "=r" (__self)				      \
+     asm ("mov %%fs:%c1,%0" : "=r" (__self)		\
 	  : "i" (offsetof (struct pthread, header.self)));	 	      \
      __self;})
+
+
+/*
+ * UKL-dynamic
+ * this macro inside of THREAD_GSCOPE_RESET_LOCK, which is used by
+ * add_dependency, which is called by _dl_lookup_symbol_x requires
+ * TLS. However, the compiler keeps trying to move the references to
+ * %fs to the very beginning of _dl_lookup_symbol_x. This is problematic
+ * because setup_vdso_pointers is called in dl_main before TLS is initialized
+ * and will cause a segfault. 
+ * we've set up TLS. I know the comment above says very explicitly NOT
+ * to do
+ */
+
+# define THREAD_SELF_VOLATILE \
+  ({ struct pthread *__self;						      \
+     asm volatile ("mov %%fs:%c1,%0" : "=r" (__self)		\
+	  : "i" (offsetof (struct pthread, header.self)));	 	      \
+     __self;})
+
+
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF_INCLUDE  <sys/reg.h> /* For the FS constant.  */

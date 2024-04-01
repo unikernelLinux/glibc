@@ -23,7 +23,7 @@
 /* Usage: long syscall (syscall_number, arg1, arg2, arg3, arg4, arg5, arg6)
    We need to do some arg shifting, the syscall_number will be in
    rax.  */
-	.weak entry_SYSCALL_64
+	
 
 	.text
 ENTRY (syscall)
@@ -34,7 +34,8 @@ ENTRY (syscall)
 	movq %r8, %r10
 	movq %r9, %r8
 	movq 8(%rsp),%r9	/* arg6 is on the stack.  */
-	call entry_SYSCALL_64	/* Do the system call.  */
+	movq entry_SYSCALL_64(%rip), %rcx
+	call *%rcx		/* Do the system call.  */
 	cmpq $-4095, %rax	/* Check %rax for error.  */
 	jae SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
 	ret			/* Return to caller.  */

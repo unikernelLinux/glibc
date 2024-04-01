@@ -229,7 +229,6 @@ extern int get_bypass_syscall(void);
 #define INTERNAL_SYSCALL_NCS(number, err, nr, args...)			\
 	internal_syscall_ndcl##nr (number, err, args)
 
-extern void (*entry_SYSCALL_64)(void);
 
 #undef internal_syscall0
 #define internal_syscall0(name, number, err, dummy...)			\
@@ -240,7 +239,8 @@ extern void (*entry_SYSCALL_64)(void);
 	resultvar = bp_##name();					\
     } else {								\
     	asm volatile (							\
-    	"call entry_SYSCALL_64\n\t"					\
+    	"movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+	"call *%%rcx"							\
     	: "=a" (resultvar)						\
     	: "0" (number)							\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -259,7 +259,8 @@ extern void (*entry_SYSCALL_64)(void);
     } else {								\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"call entry_SYSCALL_64\n\t"							\
+     	"movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+	"call *%%rcx"							\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1)						\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -280,7 +281,8 @@ extern void (*entry_SYSCALL_64)(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"call entry_SYSCALL_64\n\t"							\
+     	"movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+	"call *%%rcx"							\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2)				\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -303,7 +305,8 @@ extern void (*entry_SYSCALL_64)(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"call entry_SYSCALL_64\n\t"							\
+     	"movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+	"call *%%rcx"							\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -328,7 +331,8 @@ extern void (*entry_SYSCALL_64)(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"call entry_SYSCALL_64\n\t"							\
+     	"movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+	"call *%%rcx"							\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -355,7 +359,8 @@ extern void (*entry_SYSCALL_64)(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"call entry_SYSCALL_64\n\t"							\
+     	"movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+	"call *%%rcx"							\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
       	"r" (_a5)								\
@@ -385,7 +390,8 @@ extern void (*entry_SYSCALL_64)(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"call entry_SYSCALL_64\n\t"							\
+     	"movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+	"call *%%rcx"							\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
     	  "r" (_a5), "r" (_a6)						\
@@ -407,7 +413,8 @@ extern void (*entry_SYSCALL_64)(void);
 ({                                                                      \
     unsigned long int resultvar;                                        \
     asm volatile (                                                      \
-    "call entry_SYSCALL_64\n\t"                                                     \
+   "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)                                                  \
     : "0" (number)                                                      \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -421,7 +428,8 @@ extern void (*entry_SYSCALL_64)(void);
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);                              \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    "call entry_SYSCALL_64\n\t"                                                     \
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1)                                           \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -437,7 +445,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    "call entry_SYSCALL_64\n\t"                                                     \
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2)                                \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -455,7 +464,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    "call entry_SYSCALL_64\n\t"                                                     \
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)                     \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -475,7 +485,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    "call entry_SYSCALL_64\n\t"                                                     \
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)          \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -497,7 +508,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    "call entry_SYSCALL_64\n\t"                                                     \
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),         \
       "r" (_a5)                                                         \
@@ -522,7 +534,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    "call entry_SYSCALL_64\n\t"                                                     \
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),         \
       "r" (_a5), "r" (_a6)                                              \
@@ -608,7 +621,8 @@ extern void (*entry_SYSCALL_64)(void);
 ({									\
     unsigned long int resultvar;					\
     asm volatile (							\
-    "call entry_SYSCALL_64\n\t"							\
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)							\
     : "0" (number)							\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -622,7 +636,8 @@ extern void (*entry_SYSCALL_64)(void);
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "call entry_SYSCALL_64\n\t"							\
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1)						\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -638,7 +653,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "call entry_SYSCALL_64\n\t"							\
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2)				\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -656,7 +672,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "call entry_SYSCALL_64\n\t"							\
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -676,7 +693,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "call entry_SYSCALL_64\n\t"							\
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -698,7 +716,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "call entry_SYSCALL_64\n\t"							\
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
       "r" (_a5)								\
@@ -723,7 +742,8 @@ extern void (*entry_SYSCALL_64)(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    "call entry_SYSCALL_64\n\t"							\
+    "movq entry_SYSCALL_64(%%rip),%%rcx\n\t"			\
+   "call *%%rcx"							\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
       "r" (_a5), "r" (_a6)						\

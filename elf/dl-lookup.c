@@ -939,7 +939,7 @@ _dl_lookup_symbol_x (const char *undef_name, struct link_map *undef_map,
 				  (flags & DL_LOOKUP_GSCOPE_LOCK)
 				  ? undef_map->l_scope : symbol_scope,
 				  version, type_class, flags, skip_map);
-
+  
   /* The object is used.  */
   if (__glibc_unlikely (current_value.m->l_used == 0))
     current_value.m->l_used = 1;
