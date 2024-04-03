@@ -360,7 +360,7 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
 		    : "i" (offsetof (struct pthread, header.gscope_flag)),    \
 		      "0" (THREAD_GSCOPE_FLAG_UNUSED));			      \
       if (__res == THREAD_GSCOPE_FLAG_WAIT)				      \
-	lll_futex_wake (&THREAD_SELF->header.gscope_flag, 1, LLL_PRIVATE);    \
+	lll_futex_wake (&THREAD_SELF_VOLATILE->header.gscope_flag, 1, LLL_PRIVATE);    \
     }									      \
   while (0)
 # define THREAD_GSCOPE_SET_FLAG() \
