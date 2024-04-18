@@ -463,6 +463,13 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 static ElfW(Addr) __attribute_used__
 _dl_start (void *arg)
 {
+	/* ld.so relocating itself? Spooky */
+	asm volatile(
+			"movq %%r15, entry_SYSCALL_64(%%rip) \n\
+			 xorq %%r15, %%r15"
+			::: "memory","r15"
+	);
+			
 #ifdef DONT_USE_BOOTSTRAP_MAP
 # define bootstrap_map GL(dl_rtld_map)
 #else
