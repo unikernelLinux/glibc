@@ -1,1 +1,0 @@
-xnoremap p pgvy
