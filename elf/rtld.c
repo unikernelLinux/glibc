@@ -460,25 +460,14 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   return start_addr;
 }
 
-long entry_SYSCALL_64_buf;
-long entry_SYSCALL_64;
+long entry_SYSCALL_64(void){
+	return *(long*)0xfacade;
+}
 
 static ElfW(Addr) __attribute_used__
 _dl_start (void *arg)
 {
-/* 
- * entry_SYSCALL_64 is a GOT variable, but we need it to point to our data section, so
- * make entry_SYSCALL_64@GOT a double pointer to a global buffer 
- *
- * also don't inform the compiler that %r15 is used because I'm assuming ld.so expects
- * %r15 to be 0 on program start
- */
-asm volatile(
-  "movq %%r15, entry_SYSCALL_64_buf(%%rip)\n\t"
-  "xorq %%r15, %%r15"
-  ::: "memory"
-);
-	
+
 #ifdef DONT_USE_BOOTSTRAP_MAP
 # define bootstrap_map GL(dl_rtld_map)
 #else
@@ -541,15 +530,6 @@ asm volatile(
       ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0, 0);
     }
   bootstrap_map.l_relocated = 1;
-
-  asm volatile(
-    "leaq entry_SYSCALL_64_buf(%%rip), %0\n\t"
-    "movq %0, entry_SYSCALL_64@GOTPCREL(%%rip)\n\t"
-    :
-    : "r" (entry_SYSCALL_64_buf)
-    : "memory"
-  );
-
 
   /* Please note that we don't allow profiling of this object and
      therefore need not test whether we have to allocate the array

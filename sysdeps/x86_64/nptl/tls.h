@@ -163,9 +163,8 @@ _Static_assert (offsetof (tcbhead_t, __glibc_unused2) == 0x80,
      _head->self = _thrdescr;						      \
 									      \
      /* It is a simple syscall to set the %fs value for the thread.  */	      \
-     asm volatile ("movq entry_SYSCALL_64@GOTPCREL(%%rip), %%rcx \n\t"		      \
-		   "movq (%%rcx), %%rcx\n\t"				     \
-		   "call *%%rcx \n\t"					      \
+     asm volatile (                                                           \
+		   "call entry_SYSCALL_64@PLT"				      \
 		   : "=a" (_result)					      \
 		   : "0" ((unsigned long int) __NR_arch_prctl),		      \
 		     "D" ((unsigned long int) ARCH_SET_FS),		      \

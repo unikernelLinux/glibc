@@ -239,9 +239,7 @@ extern int get_bypass_syscall(void);
 	resultvar = bp_##name();					\
     } else {								\
     	asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     	: "=a" (resultvar)						\
     	: "0" (number)							\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -260,9 +258,7 @@ extern int get_bypass_syscall(void);
     } else {								\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1)						\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -283,9 +279,7 @@ extern int get_bypass_syscall(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2)				\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -308,9 +302,7 @@ extern int get_bypass_syscall(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -335,9 +327,7 @@ extern int get_bypass_syscall(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -364,10 +354,8 @@ extern int get_bypass_syscall(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
-    	: "=a" (resultvar)							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
+	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
       	"r" (_a5)								\
     	: "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -396,9 +384,7 @@ extern int get_bypass_syscall(void);
     	register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     	register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     	asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     	: "=a" (resultvar)							\
     	: "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
     	  "r" (_a5), "r" (_a6)						\
@@ -420,9 +406,7 @@ extern int get_bypass_syscall(void);
 ({                                                                      \
     unsigned long int resultvar;                                        \
     asm volatile (                                                      \
-    "movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-    "movq (%%rcx), %%rcx\n\t"					\
-    "call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)                                                  \
     : "0" (number)                                                      \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -436,9 +420,7 @@ extern int get_bypass_syscall(void);
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);                              \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1)                                           \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -454,9 +436,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2)                                \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -474,9 +454,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)                     \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -496,9 +474,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)          \
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);                        \
@@ -520,9 +496,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),         \
       "r" (_a5)                                                         \
@@ -547,9 +521,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;                   \
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;                   \
     asm volatile (                                                      \
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)                                                  \
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),         \
       "r" (_a5), "r" (_a6)                                              \
@@ -635,9 +607,7 @@ extern int get_bypass_syscall(void);
 ({									\
     unsigned long int resultvar;					\
     asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)							\
     : "0" (number)							\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -651,9 +621,7 @@ extern int get_bypass_syscall(void);
     TYPEFY (arg1, __arg1) = ARGIFY (arg1);			 	\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1)						\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -669,9 +637,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2)				\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -689,9 +655,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3)			\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -711,9 +675,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4)		\
     : "memory", REGISTERS_CLOBBERED_BY_SYSCALL);			\
@@ -735,9 +697,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
       "r" (_a5)								\
@@ -762,9 +722,7 @@ extern int get_bypass_syscall(void);
     register TYPEFY (arg2, _a2) asm ("rsi") = __arg2;			\
     register TYPEFY (arg1, _a1) asm ("rdi") = __arg1;			\
     asm volatile (							\
-    	"movq entry_SYSCALL_64@GOTPCREL(%%rip),%%rcx\n\t"			\
-	"movq (%%rcx), %%rcx\n\t"					\
-	"call *%%rcx"							\
+    	"call entry_SYSCALL_64@PLT\n\t"			\
     : "=a" (resultvar)							\
     : "0" (number), "r" (_a1), "r" (_a2), "r" (_a3), "r" (_a4),		\
       "r" (_a5), "r" (_a6)						\
