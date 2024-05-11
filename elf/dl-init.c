@@ -22,7 +22,7 @@
 
 /* Type of the initializer.  */
 typedef void (*init_t) (int, char **, char **);
-
+typedef void (*ukl_init_t) (int, char **, char **, void *);
 
 static void
 call_init (struct link_map *l, int argc, char **argv, char **env)

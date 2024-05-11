@@ -46,10 +46,13 @@ __libc_init_first (int argc, char **argv, char **envp)
   /* For DSOs we do not need __libc_init_first but instead _init.  */
 }
 
+extern void *entry_SYSCALL_64;
+
 void
 attribute_hidden
-_init (int argc, char **argv, char **envp)
+_init (int argc, char **argv, char **envp, void* dl_entry_SYSCALL_64)
 {
+  entry_SYSCALL_64 = dl_entry_SYSCALL_64;
 #endif
 
   __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;

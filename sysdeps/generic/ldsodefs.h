@@ -99,8 +99,11 @@ typedef struct link_map *lookup_t;
 # define DL_SYMBOL_ADDRESS(map, ref) \
  (void *) SYMBOL_ADDRESS (map, ref, false)
 # define DL_LOOKUP_ADDRESS(addr) ((ElfW(Addr)) (addr))
+
+// XXX since ukl only supports x86_64, i'm not sure this should actually go here
+extern void* entry_SYSCALL_64;
 # define DL_CALL_DT_INIT(map, start, argc, argv, env) \
- ((init_t) (start)) (argc, argv, env)
+ ((ukl_init_t) (start)) (argc, argv, env, entry_SYSCALL_64)
 # define DL_CALL_DT_FINI(map, start) ((fini_t) (start)) ()
 #endif
 

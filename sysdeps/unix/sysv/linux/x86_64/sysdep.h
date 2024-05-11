@@ -230,6 +230,7 @@ extern int get_bypass_syscall(void);
 	internal_syscall_ndcl##nr (number, err, args)
 
 
+extern void *entry_SYSCALL_64;
 #undef internal_syscall0
 #define internal_syscall0(name, number, err, dummy...)			\
 ({									\
