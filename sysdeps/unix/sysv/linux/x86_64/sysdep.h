@@ -217,7 +217,9 @@
    x32.  */
 #define ARGIFY(X) ((__typeof__ ((X) - (X))) (X))
 
-#ifdef UKL_BP
+// getting rtld to use the plt is more trouble than it's worth,
+// so just have it always use UKL base model
+#if defined(UKL_BP) && !IS_IN(rtld)
 
 extern int get_bypass_syscall(void);
 
@@ -230,7 +232,6 @@ extern int get_bypass_syscall(void);
 	internal_syscall_ndcl##nr (number, err, args)
 
 
-extern void *entry_SYSCALL_64;
 #undef internal_syscall0
 #define internal_syscall0(name, number, err, dummy...)			\
 ({									\

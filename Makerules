@@ -543,7 +543,8 @@ $(LINK.o) -shared -static-libgcc -Wl,-O1 $(sysdep-LDFLAGS) \
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  -Wl,-soname=lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
 	  $(LDFLAGS.so) $(LDFLAGS-lib.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
-	  -L$(subst :, -L,$(rpath-link)) -L$(common-objpfx).. -Wl,-rpath-link=$(rpath-link):$(common-objpfx).. 
+	  -L$(subst :, -L,$(rpath-link)) -L$(common-objpfx).. -Wl,-rpath-link=$(rpath-link):$(common-objpfx).. \
+	  -Wl,-rpath=/data
 endef
 
 ifeq (yes,$(use-default-link))
@@ -593,7 +594,8 @@ endif
 define build-shlib
 $(build-shlib-helper) -o $@ $(shlib-lds-flags) \
 	  $(csu-objpfx)abi-note.o $(build-shlib-objlist) \
-	  $(common-objpfx)../entry-patch.o -luklsyms
+	  $(common-objpfx)../entry-patch.o $(common-objpfx)../undefined_sys_hack.o \
+	  -luklsyms
 endef
 
 define build-module-helper
