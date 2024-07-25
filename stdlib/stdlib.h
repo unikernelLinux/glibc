@@ -483,6 +483,19 @@ extern unsigned short int *seed48 (unsigned short int __seed16v[3])
      __THROW __nonnull ((1));
 extern void lcong48 (unsigned short int __param[7]) __THROW __nonnull ((1));
 
+/* Return a random integer between zero and 2**32-1 (inclusive).  */
+extern __uint32_t arc4random (void)
+     __THROW __wur;
+
+/* Fill the buffer with random data.  */
+extern void arc4random_buf (void *__buf, size_t __size)
+     __THROW __nonnull ((1));
+
+/* Return a random number between zero (inclusive) and the specified
+   limit (exclusive).  */
+extern __uint32_t arc4random_uniform (__uint32_t __upper_bound)
+     __THROW __wur;
+
 # ifdef __USE_MISC
 /* Data structure for communication with thread safe versions.  This
    type is to be regarded as opaque.  It's only exported because users

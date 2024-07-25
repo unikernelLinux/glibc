@@ -24,6 +24,7 @@
 #include <sysdep.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/poll.h>
 #include <sys/syscall.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -83,5 +84,27 @@ hidden_proto (__write_nocancel)
 hidden_proto (__close_nocancel)
 hidden_proto (__fcntl64_nocancel)
 #endif
+
+static inline ssize_t
+__getrandom_nocancel (void *buf, size_t buflen, unsigned int flags)
+{
+  return INLINE_SYSCALL_CALL (getrandom, buf, buflen, flags);
+}
+
+/* Non cancellable getrandom syscall that does not also set errno in case of
+   failure.  */
+static inline ssize_t
+__getrandom_nocancel_nostatus (void *buf, size_t buflen, unsigned int flags)
+{
+  return INTERNAL_SYSCALL_CALL (getrandom, buf, buflen, flags);
+}
+
+typedef unsigned long int nfds_t;
+
+static inline int
+__poll_infinity_nocancel (struct pollfd *fds, nfds_t nfds)
+{
+  return INLINE_SYSCALL_CALL (ppoll, fds, nfds, NULL, NULL, 0);
+}
 
 #endif /* NOT_CANCEL_H  */
