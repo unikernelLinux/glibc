@@ -1,5 +1,7 @@
+ifneq ($(inhibit-ioperm-iopl),yes)
 ifeq ($(subdir),misc)
 sysdep_routines += ioperm iopl
+endif
 endif
 
 ifeq ($(subdir),stdlib)

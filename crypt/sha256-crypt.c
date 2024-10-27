@@ -24,6 +24,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <sys/param.h>
+#include <sysdep.h>
 
 #include "sha256.h"
 #include "crypt-private.h"

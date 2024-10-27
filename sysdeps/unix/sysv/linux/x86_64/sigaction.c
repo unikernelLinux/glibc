@@ -78,7 +78,7 @@ asm									\
    "	.type __" #name ",@function\n"					\
    "__" #name ":\n"							\
    "	movq $" #syscall ", %rax\n"					\
-   "	syscall\n"							\
+   "	call    entry_SYSCALL_64\n"							\
    ".LEND_" #name ":\n"							\
    ".section .eh_frame,\"a\",@progbits\n"				\
    ".LSTARTFRAME_" #name ":\n"						\

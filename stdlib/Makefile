@@ -33,7 +33,7 @@ headers	:= stdlib.h bits/stdlib.h bits/stdlib-ldbl.h bits/stdlib-float.h      \
 
 routines	:=							      \
 	atof atoi atol atoll						      \
-	abort								      \
+	abort arc4random arc4random_uniform				      \
 	bsearch qsort msort						      \
 	getenv putenv setenv secure-getenv				      \
 	exit on_exit atexit cxa_atexit cxa_finalize old_atexit		      \

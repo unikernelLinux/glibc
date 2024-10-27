@@ -125,6 +125,14 @@ libc_hidden_proto (__libc_reallocarray)
 
 extern int __libc_system (const char *line);
 
+__typeof (arc4random) __arc4random;
+libc_hidden_proto (__arc4random);
+__typeof (arc4random_buf) __arc4random_buf;
+libc_hidden_proto (__arc4random_buf);
+__typeof (arc4random_uniform) __arc4random_uniform;
+libc_hidden_proto (__arc4random_uniform);
+extern void __arc4random_buf_internal (void *buffer, size_t len)
+     attribute_hidden;
 
 extern double __strtod_internal (const char *__restrict __nptr,
 				 char **__restrict __endptr, int __group)

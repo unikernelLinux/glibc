@@ -97,10 +97,10 @@ _nss_files_getsecretkey (const char *netname, char *skey, char *passwd,
   status = search (netname, buf, errnop, 1);
   if (status != NSS_STATUS_SUCCESS)
     return status;
-
+  /*
   if (!xdecrypt (buf, passwd))
     return NSS_STATUS_SUCCESS;
-
+  */
   if (memcmp (buf, &(buf[HEXKEYBYTES]), KEYCHECKSUMSIZE) != 0)
     return NSS_STATUS_SUCCESS;
 
